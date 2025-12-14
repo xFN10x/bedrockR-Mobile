@@ -12,6 +12,12 @@ android {
         version = release(36)
     }
 
+    packaging {
+        resources {
+            excludes += "fn10.bedrockr/Launcher.class"
+        }
+    }
+
     defaultConfig {
         applicationId = "fn10.bedrockrmobile"
         minSdk = 28
@@ -58,6 +64,7 @@ dependencies {
     implementation(libs.coordinatorlayout)
     implementation(libs.constraintlayout)
     implementation(libs.bedrockr.vmastersnapshot)
+    implementation("com.google.code.gson:gson:2.10.1")
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

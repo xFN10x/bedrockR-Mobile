@@ -1,5 +1,3 @@
 <resources>
     <string name="app_name">bedrockR Mobile</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="greeting" />
 </resources>
