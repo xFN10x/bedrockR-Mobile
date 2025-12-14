@@ -1,5 +1,3 @@
-import jdk.javadoc.internal.tool.resources.javadoc
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -18,15 +16,21 @@ android {
         }
     }
 
+
+
     defaultConfig {
         applicationId = "fn10.bedrockrmobile"
         minSdk = 28
         targetSdk = 36
         versionCode = 1
-        versionName = "1.0 (a1.5)"
+        versionName = "1.0 (a2.0)"
 
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        ndk {
+            abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86_64")
+        }
     }
 
     buildTypes {
@@ -51,6 +55,12 @@ android {
 }
 
 dependencies {
+    // https://mvnrepository.com/artifact/com.google.guava/guava
+    implementation(libs.guava)
+    implementation(libs.commons.io)
+    implementation(libs.commons.lang3)
+    implementation(libs.bedrockr.v811c54da54)
+
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.lifecycle.runtime.ktx)
@@ -63,8 +73,7 @@ dependencies {
     implementation(libs.core.ktx)
     implementation(libs.coordinatorlayout)
     implementation(libs.constraintlayout)
-    implementation(libs.bedrockr.vmastersnapshot)
-    implementation("com.google.code.gson:gson:2.10.1")
+    implementation(libs.gson)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
