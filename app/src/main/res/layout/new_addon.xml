@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/backButton"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -42,6 +42,7 @@
             android:id="@+id/innerScroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:orientation="vertical"
             android:padding="8dp">
 
@@ -60,6 +61,94 @@
                 android:background="@drawable/button"
                 android:text="@string/select_icon"
                 android:textAllCaps="false" />
+
+            <EditText
+                android:id="@+id/addonNameBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:autofillHints=""
+                android:background="@drawable/button"
+                android:ems="10"
+                android:hint="@string/addon_name"
+                android:inputType="text|textCapWords"
+                android:padding="15dp"
+                android:textColorHint="@color/accentColor"
+                android:textCursorDrawable="@color/white" />
+
+            <EditText
+                android:id="@+id/addonPrefixBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:autofillHints=""
+                android:background="@drawable/button"
+                android:ems="10"
+                android:hint="@string/addon_prefix"
+                android:inputType="text|textCapWords"
+                android:padding="15dp"
+                android:textColorHint="@color/accentColor"
+                android:textCursorDrawable="@color/white" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/minimumEngineVersionFull"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="24dp">
+
+                <TextView
+                    android:id="@+id/minimumEngineVersionText"
+                    android:layout_width="0dp"
+                    android:layout_height="28sp"
+                    android:text="@string/mimimum_engine_version"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Spinner
+                    android:id="@+id/minimumEngineVersionSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="49dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/button"
+                    android:entries="@array/minimum_version"
+                    android:padding="15dp"
+                    android:spinnerMode="dropdown"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/minimumEngineVersionText" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <EditText
+                android:id="@+id/addonPrefixBox2"
+                android:layout_width="match_parent"
+                android:layout_height="97dp"
+                android:layout_marginTop="24dp"
+                android:autofillHints=""
+                android:background="@drawable/button"
+                android:ems="10"
+                android:hint="@string/addon_description"
+                android:inputType="text|textShortMessage"
+                android:padding="15dp"
+                android:textAlignment="textStart"
+                android:textColorHint="@color/accentColor"
+                android:textCursorDrawable="@color/white" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/selectIconButton2"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/button"
+                android:text="Create Addon!"
+                android:textAllCaps="false"
+                android:textSize="20sp" />
+
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

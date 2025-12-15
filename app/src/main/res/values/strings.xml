@@ -6,4 +6,8 @@
     <string name="select_icon">Select Icon...</string>
     <string name="your_addon_s_icon">Your addon\'s icon</string>
     <string name="back_arrow"><![CDATA[<]]></string>
+    <string name="addon_description">Addon Description</string>
+    <string name="mimimum_engine_version">Mimimum Engine Version</string>
+    <string name="addon_prefix">Addon Prefix</string>
+    <string name="addon_name">Addon Name</string>
 </resources>

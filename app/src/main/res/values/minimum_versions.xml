@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="minimum_version">
+        <item>1.21.130</item>
+    </string-array>
+</resources>

@@ -32,7 +32,7 @@ import fn10.bedrockrmobile.R;
 
 public class NewAddonActivity extends AppCompatActivity {
 
-    private Uri selectedImg = null;
+    private Bitmap selectedImg = null;
     private ImageView iconView;
     private Button selectIconButton;
 
@@ -49,7 +49,6 @@ public class NewAddonActivity extends AppCompatActivity {
         ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
                 registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
                     if (uri != null) {
-                        selectedImg = uri;
                         BitmapDrawable d = null;
                         try {
                             ImageDecoder.Source source = ImageDecoder.createSource(getContentResolver(), uri);
@@ -62,8 +61,8 @@ public class NewAddonActivity extends AppCompatActivity {
                             }
                             else
                                 smallerBitmap = Bitmap.createBitmap(bitmap, 0, ((bitmap.getHeight() - cropTo) /2), cropTo, cropTo);
-
                             d = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(smallerBitmap, 1000, 1000, false));
+                            selectedImg = d.getBitmap();
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
