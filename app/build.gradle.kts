@@ -6,9 +6,8 @@ plugins {
 
 android {
     namespace = "fn10.bedrockrmobile"
-    compileSdk {
-        version = release(36)
-    }
+
+    compileSdk = 36
 
     packaging {
         resources {
@@ -20,12 +19,12 @@ android {
 
     defaultConfig {
         applicationId = "fn10.bedrockrmobile"
-        minSdk = 28
+        minSdk = 33
         targetSdk = 36
         versionCode = 1
         versionName = "1.0 (a2.0)"
 
-
+        multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         ndk {
@@ -43,6 +42,7 @@ android {
         }
     }
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
@@ -55,11 +55,13 @@ android {
 }
 
 dependencies {
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
+
     // https://mvnrepository.com/artifact/com.google.guava/guava
     implementation(libs.guava)
     implementation(libs.commons.io)
     implementation(libs.commons.lang3)
-    implementation(libs.bedrockr.v811c54da54)
+    implementation(libs.bedrockr)
 
     implementation(libs.appcompat)
     implementation(libs.material)

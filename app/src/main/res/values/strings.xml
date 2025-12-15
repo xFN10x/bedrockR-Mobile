@@ -3,4 +3,7 @@
     <string name="other_greeting">Welcome to bedrockR Mobile! Below are your addons. Have none? Create a one with the button above.</string>
     <string name="new_addon_context">Button to create new addon</string>
     <string name="addon_bg">Background of addon</string>
+    <string name="select_icon">Select Icon...</string>
+    <string name="your_addon_s_icon">Your addon\'s icon</string>
+    <string name="back_arrow"><![CDATA[<]]></string>
 </resources>

@@ -1,6 +1,7 @@
 package fn10.bedrockrmobile;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +19,7 @@ import fn10.bedrockr.addons.source.supporting.item.ReturnItemInfo;
 import fn10.bedrockr.utils.Greetings;
 import fn10.bedrockr.utils.RFileOperations;
 import fn10.bedrockr.utils.SettingsFile;
+import fn10.bedrockrmobile.activity.NewAddonActivity;
 
 public class Launcher extends Activity {
 
@@ -49,7 +51,9 @@ public class Launcher extends Activity {
         newAddonButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent();
+                intent.setAction("bedrockrmobile.intent.CREATE");
+                startActivity(intent);
             }
         });
     }

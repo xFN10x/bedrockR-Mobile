@@ -12,10 +12,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BedrockRMobile">
         <activity android:name=".Launcher"
+            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".activity.NewAddonActivity"
+            android:screenOrientation="portrait"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="bedrockrmobile.intent.CREATE" />
+                <category android:name="bedrockrmobile.category.ADDONS" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
     </application>
