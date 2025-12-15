@@ -38,7 +38,7 @@
         android:textSize="16sp"
         android:textStyle="italic"
         android:theme="@style/Theme.BedrockRMobile"
-        app:layout_constraintBottom_toTopOf="@+id/AddonSelectionScroll"
+        app:layout_constraintBottom_toTopOf="@+id/ElementScroll"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -56,7 +56,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
-        android:id="@+id/AddonSelectionScroll"
+        android:id="@+id/ElementScroll"
         android:layout_width="0dp"
         android:layout_height="600dp"
         android:layout_marginStart="8dp"
@@ -69,82 +69,12 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout
-            android:id="@+id/AddonSelection"
+            android:id="@+id/ElementInnerScroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:theme="@style/Theme.BedrockRMobile">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/RAddon"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:background="@drawable/raddon"
-                android:padding="5dp"
-                android:theme="@style/Theme.BedrockRMobile">
-
-                <ImageView
-                    android:id="@+id/addonBackground"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="-8dp"
-                    android:layout_marginTop="-32dp"
-                    android:layout_marginEnd="-8dp"
-                    android:layout_marginBottom="-32dp"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="@string/addon_bg"
-                    android:padding="2dp"
-                    android:scaleType="centerCrop"
-                    android:theme="@style/Theme.BedrockRMobile"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="1.0"
-                    android:src="@drawable/defaulticon" />
-
-                <View
-                    android:id="@+id/addonGradient"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/gradiant"
-                    android:theme="@style/Theme.BedrockRMobile"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
-
-                <Button
-                    android:id="@+id/loadAddonButton"
-                    android:layout_width="0dp"
-                    android:layout_height="60dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:background="@drawable/button"
-                    android:text="Load Addon"
-                    android:textAllCaps="false"
-                    android:theme="@style/Theme.BedrockRMobile"
-                    app:layout_constraintBottom_toBottomOf="@+id/addonGradient"
-                    app:layout_constraintEnd_toEndOf="@+id/addonGradient"
-                    app:layout_constraintStart_toStartOf="@+id/addonGradient" />
-
-                <TextView
-                    android:id="@+id/addonName"
-                    android:layout_width="0dp"
-                    android:layout_height="26dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:fontFamily="@font/font"
-                    android:text="Addon Name"
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:theme="@style/Theme.BedrockRMobile"
-                    app:layout_constraintBottom_toTopOf="@+id/loadAddonButton"
-                    app:layout_constraintEnd_toEndOf="@+id/addonGradient"
-                    app:layout_constraintStart_toStartOf="@+id/addonGradient" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>
     </ScrollView>

@@ -10,4 +10,6 @@
     <string name="mimimum_engine_version">Mimimum Engine Version</string>
     <string name="addon_prefix">Addon Prefix</string>
     <string name="addon_name">Addon Name</string>
+    <string name="load_addon">Load Addon</string>
+    <string name="build_elements">Build Elements</string>
 </resources>
