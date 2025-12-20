@@ -2,9 +2,8 @@
     <string name="app_name">bedrockR Mobile</string>
     <string name="other_greeting">Welcome to bedrockR Mobile! Below are your addons. Have none? Create a one with the button above.</string>
     <string name="new_addon_context">Button to create new addon</string>
-    <string name="addon_bg">Background of addon</string>
+    <string name="addon_icon_description">Your addon\'s icon</string>
     <string name="select_icon">Select Icon...</string>
-    <string name="your_addon_s_icon">Your addon\'s icon</string>
     <string name="back_arrow" translatable="false"><![CDATA[<]]></string>
     <string name="addon_description">Addon Description</string>
     <string name="minimum_engine_version">Minimum Engine Version</string>
@@ -28,4 +27,11 @@
     <string name="affirm">Yes</string>
     <string name="acknowledge">OK</string>
     <string name="deny">No</string>
+    <string name="element_scroll_description">Element Scroll</string>
+    <string name="add_element_description">Add Element</string>
+    <string name="add_resource_description">Add Resource</string>
+    <string name="open_wiki_description">Open Wiki</string>
+    <string name="launch_minecraft_and_update_the_addon_description">Launch Minecraft, and update the addon</string>
+    <string name="launch_minecraft_description">Launch Minecraft</string>
+    <string name="re_build_workspace_description">Re-Build Workspace</string>
 </resources>

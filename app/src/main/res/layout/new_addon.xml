@@ -50,7 +50,7 @@
                 android:id="@+id/addonIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="311dp"
-                android:contentDescription="@string/your_addon_s_icon"
+                android:contentDescription="@string/addon_icon_description"
                 app:srcCompat="@drawable/defaulticon" />
 
             <androidx.appcompat.widget.AppCompatButton

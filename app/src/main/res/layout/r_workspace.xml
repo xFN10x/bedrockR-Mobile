@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/background"
@@ -10,18 +9,20 @@
     <ScrollView
         android:id="@+id/ElementScroll"
         android:layout_width="0dp"
-        android:layout_height="550dp"
+        android:layout_height="0dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/addon_selector"
-        android:contentDescription="Element Scroll"
+        android:contentDescription="@string/element_scroll_description"
         android:padding="5dp"
         android:theme="@style/Theme.BedrockRMobile"
-        app:layout_constraintBottom_toTopOf="@+id/buildElementsButton"
+        app:layout_constraintBottom_toTopOf="@+id/reBuildButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/launchMCButton">
 
         <LinearLayout
             android:id="@+id/ElementInnerScroll"
@@ -47,43 +48,39 @@
 
     <ImageButton
         android:id="@+id/buildElementsButton"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginBottom="16dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/button"
         android:contentDescription="@string/build_elements"
         android:scaleType="fitXY"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/addElementButton"
+        app:layout_constraintEnd_toEndOf="@+id/addElementButton"
+        app:layout_constraintStart_toStartOf="@+id/addElementButton"
         app:srcCompat="@drawable/build" />
 
     <ImageButton
         android:id="@+id/launchMCAndBuild"
-        android:layout_width="60dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/button"
-        android:contentDescription="Launch Minecraft, and update the addon"
+        android:contentDescription="@string/launch_minecraft_and_update_the_addon_description"
         android:scaleType="fitCenter"
-        app:layout_constraintBottom_toTopOf="@+id/ElementScroll"
-        app:layout_constraintEnd_toStartOf="@+id/launchMCButton"
-        app:layout_constraintTop_toBottomOf="@+id/Toolbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/launchmcwimport" />
 
     <ImageButton
         android:id="@+id/launchMCButton"
-        android:layout_width="100dp"
-        android:layout_height="0dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:background="@drawable/button"
-        android:contentDescription="Launch Minecraft"
+        android:contentDescription="@string/launch_minecraft_description"
         android:scaleType="fitCenter"
-        app:layout_constraintBottom_toTopOf="@+id/ElementScroll"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -91,14 +88,27 @@
         app:srcCompat="@drawable/launchmc" />
 
     <ImageButton
+        android:id="@+id/helpButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/button"
+        android:contentDescription="@string/open_wiki_description"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="@+id/launchMCButton"
+        app:layout_constraintEnd_toStartOf="@+id/launchMCButton"
+        app:layout_constraintTop_toTopOf="@+id/launchMCButton"
+        app:srcCompat="@drawable/help" />
+
+    <ImageButton
         android:id="@+id/addResourceButton"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:background="@drawable/button"
-        android:contentDescription="Add Resource"
+        android:contentDescription="@string/add_resource_description"
         android:scaleType="fitXY"
-        app:layout_constraintBottom_toBottomOf="@+id/buildElementsButton"
-        app:layout_constraintEnd_toStartOf="@+id/buildElementsButton"
+        app:layout_constraintBottom_toBottomOf="@+id/launchMCAndBuild"
+        app:layout_constraintEnd_toStartOf="@+id/launchMCAndBuild"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/newresource" />
 
@@ -108,11 +118,11 @@
         android:layout_height="50dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/button"
-        android:contentDescription="Re-Build Workspace"
+        android:contentDescription="@string/re_build_workspace_description"
         android:scaleType="fitXY"
         app:layout_constraintBottom_toTopOf="@+id/addResourceButton"
-        app:layout_constraintEnd_toStartOf="@+id/buildElementsButton"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/addResourceButton"
+        app:layout_constraintStart_toStartOf="@+id/addResourceButton"
         app:srcCompat="@drawable/rebuild" />
 
     <ImageButton
@@ -120,11 +130,11 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:background="@drawable/button"
-        android:contentDescription="Add Element"
+        android:contentDescription="@string/add_element_description"
         android:scaleType="fitXY"
-        app:layout_constraintBottom_toBottomOf="@+id/buildElementsButton"
+        app:layout_constraintBottom_toBottomOf="@+id/launchMCAndBuild"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/buildElementsButton"
+        app:layout_constraintStart_toEndOf="@+id/launchMCAndBuild"
         app:srcCompat="@drawable/newelement" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

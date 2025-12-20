@@ -3,6 +3,7 @@ package fn10.bedrockrmobile.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import fn10.bedrockr.addons.source.SourceWorkspaceFile;
 import fn10.bedrockr.addons.source.elementFiles.GlobalBuildingVariables;
@@ -71,8 +73,6 @@ public class RWorkspaceViewActivity extends AppCompatActivity {
         });
 
         updateAddonAndPlayButton.setOnClickListener(v -> {
-            RLoadingDialog dialog = new RLoadingDialog();
-            dialog.show(getSupportFragmentManager(), "R_LOADING_SCREEN");
             try {
                 String stringVersion = swf.getSerilized().BPVersion;
                 List<Long> longList = new ArrayList<Long>();
@@ -90,20 +90,22 @@ public class RWorkspaceViewActivity extends AppCompatActivity {
                 swf.getSerilized().RPVersion = currentStringVersion;
                 swf.buildJSONFile(swf.workspaceName());
 
-                buildElements(false);
+                buildElements(false, () -> {
+                    Intent minecraftImportIntent = new Intent(Intent.ACTION_VIEW);
+                    minecraftImportIntent.setData(FileProvider.getUriForFile(
+                            this,
+                            getPackageName() + ".provider",
+                            RMFileOperations.getMCAddonOfWorkspace(swf.workspaceName()).toFile()));
+                    minecraftImportIntent.setPackage("com.mojang.minecraftpe");
+                    minecraftImportIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    startActivity(minecraftImportIntent);
+                });
+
+
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            dialog.dismiss();
-            Intent minecraftImportIntent = new Intent(Intent.ACTION_VIEW);
-            minecraftImportIntent.setData(FileProvider.getUriForFile(
-                    this,
-                    getPackageName() + ".provider", RFileOperations.getBaseDirectory(
-                            "build","MCA"
-                    ).toPath().resolve(swf.workspaceName() + " - BP.mcpack").toFile()));
-            minecraftImportIntent.setPackage("com.mojang.minecraftpe");
-            minecraftImportIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            startActivity(minecraftImportIntent);
+
             /*startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
                     "minecraft:///?importpack=" +
                             RMFileOperations.BEDROCKR_PUBLIC_PATH.resolve("BP/"+swf.workspaceName()+" - BP.mcpack")
@@ -114,10 +116,12 @@ public class RWorkspaceViewActivity extends AppCompatActivity {
 
 
         rebuildButton.setOnClickListener(v -> {
-            RLoadingDialog dialog = new RLoadingDialog();
-            dialog.show(getSupportFragmentManager(), "R_LOADING_SCREEN");
             try {
-                buildElements(true);
+                buildElements(true, () -> {
+                    Looper.prepare();
+                    Toast finishedToast = Toast.makeText(this, R.string.build_success, Toast.LENGTH_SHORT);
+                    finishedToast.show();
+                });
             } catch (IOException e) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_BedrockRMobile_AlertDialog);
                 builder.setTitle(R.string.build_failed);
@@ -131,16 +135,16 @@ public class RWorkspaceViewActivity extends AppCompatActivity {
                 dio.show();
                 return;
             }
-            dialog.dismiss();
-            Toast finishedToast = Toast.makeText(this, R.string.build_success, Toast.LENGTH_SHORT);
-            finishedToast.show();
+
         });
 
         buildButton.setOnClickListener(v -> {
-            RLoadingDialog dialog = new RLoadingDialog();
-            dialog.show(getSupportFragmentManager(), "R_LOADING_SCREEN");
             try {
-                buildElements(false);
+                buildElements(false, () -> {
+                    Looper.prepare();
+                    Toast finishedToast = Toast.makeText(this, R.string.build_success, Toast.LENGTH_SHORT);
+                    finishedToast.show();
+                });
             } catch (IOException e) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_BedrockRMobile_AlertDialog);
                 builder.setTitle(R.string.build_failed);
@@ -154,9 +158,6 @@ public class RWorkspaceViewActivity extends AppCompatActivity {
                 dio.show();
                 return;
             }
-            dialog.dismiss();
-            Toast finishedToast = Toast.makeText(this, R.string.build_success, Toast.LENGTH_SHORT);
-            finishedToast.show();
         });
 
         RFileOperations.setCurrentWorkspace(SWPF);
@@ -234,36 +235,57 @@ public class RWorkspaceViewActivity extends AppCompatActivity {
         }
     }
 */
-    public void buildElements(boolean rebuild) throws IOException {
-        if (rebuild)
-            Log.i(tag, "Rebuilding workspace: " + swf.workspaceName());
-        else
-            Log.i(tag, "Building workspace: " + swf.workspaceName());
-        String BPdir = RFileOperations.getBaseDirectory("build", "BP", swf.workspaceName()).toString();
-        String RPdir = RFileOperations.getBaseDirectory("build", "RP", swf.workspaceName()).toString();
 
-        if (rebuild) {
+    /**
+     * Builds all the elements in the workspace.
+     *
+     * @param rebuild Specifies if the build folders should be deleted before the workspace is made
+     * @return The MCAddon created
+     * @throws IOException If deleting the build folders fails
+     */
+    public void buildElements(boolean rebuild, Runnable whenDone) throws IOException {
+        RLoadingDialog dialog = new RLoadingDialog();
+        runOnUiThread(() -> dialog.show(getSupportFragmentManager(), "R_LOADING_SCREEN"));
+
+        new Thread(() -> {
             try {
-                FileUtils.deleteDirectory(new File(BPdir));
-                FileUtils.deleteDirectory(new File(RPdir));
-            } catch (IOException e) {
+                if (rebuild)
+                    Log.i(tag, "Rebuilding workspace: " + swf.workspaceName());
+                else
+                    Log.i(tag, "Building workspace: " + swf.workspaceName());
+                String BPdir = RFileOperations.getBaseDirectory("build", "BP", swf.workspaceName()).toString();
+                String RPdir = RFileOperations.getBaseDirectory("build", "RP", swf.workspaceName()).toString();
+
+                if (rebuild) {
+                    try {
+                        FileUtils.deleteDirectory(new File(BPdir));
+                        FileUtils.deleteDirectory(new File(RPdir));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                GlobalBuildingVariables gbv = new GlobalBuildingVariables(swf.getSerilized(), RFileOperations.getResources(swf.workspaceName()).getSerilized());
+                List<ElementFile<?>> toBuild = List.of(RFileOperations.getElementsFromWorkspace(swf.workspaceName()));
+
+                //build all elements
+                for (ElementFile<?> element : toBuild) {
+                    element.build(BPdir, swf.getSerilized(), RPdir, gbv);
+                }
+
+                //build resources
+                gbv.build(BPdir, swf.getSerilized(), RPdir, gbv);
+                //build workspace
+                swf.getSerilized().build(BPdir, swf.getSerilized(), RPdir, gbv);
+
+                //build mcpack
+                RMFileOperations.buildMCAddon(swf.workspaceName());
+
+                whenDone.run();
+                runOnUiThread(dialog::dismiss);
+            } catch (RuntimeException | IOException e) {
                 throw new RuntimeException(e);
             }
-        }
-
-        GlobalBuildingVariables gbv = new GlobalBuildingVariables(swf.getSerilized(), RFileOperations.getResources(swf.workspaceName()).getSerilized());
-        List<ElementFile<?>> toBuild = List.of(RFileOperations.getElementsFromWorkspace(swf.workspaceName()));
-
-        //build all elements
-        for (ElementFile<?> element : toBuild) {
-            element.build(BPdir, swf.getSerilized(), RPdir, gbv);
-        }
-
-        //build resources
-        gbv.build(BPdir, swf.getSerilized(), RPdir, gbv);
-        //build workspace
-        swf.getSerilized().build(BPdir, swf.getSerilized(), RPdir, gbv);
-        //build mcpacks
-        RMFileOperations.buildMCAddon();
+        }).start();
     }
 }
