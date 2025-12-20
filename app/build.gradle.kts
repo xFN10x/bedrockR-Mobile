@@ -20,9 +20,9 @@ android {
     defaultConfig {
         applicationId = "fn10.bedrockrmobile"
         minSdk = 33
-        targetSdk = 36
+        targetSdk = 34
         versionCode = 1
-        versionName = "1.0 (a2.0)"
+        versionName = "a1.0 (a2.0)"
 
         multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -62,6 +62,8 @@ dependencies {
     implementation(libs.commons.io)
     implementation(libs.commons.lang3)
     implementation(libs.bedrockr)
+    // https://mvnrepository.com/artifact/net.lingala.zip4j/zip4j
+    implementation("net.lingala.zip4j:zip4j:2.11.5")
 
     implementation(libs.appcompat)
     implementation(libs.material)

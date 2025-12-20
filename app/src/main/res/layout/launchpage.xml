@@ -27,18 +27,16 @@
     <TextView
         android:id="@+id/otherGreeting"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
         android:fontFamily="@font/font"
         android:text="@string/other_greeting"
         android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="italic"
         android:theme="@style/Theme.BedrockRMobile"
-        app:layout_constraintBottom_toTopOf="@+id/ElementScroll"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -57,16 +55,19 @@
 
     <ScrollView
         android:id="@+id/ElementScroll"
-        android:layout_width="0dp"
-        android:layout_height="600dp"
+        android:layout_width="397dp"
+        android:layout_height="0dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/addon_selector"
         android:padding="5dp"
         android:theme="@style/Theme.BedrockRMobile"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/otherGreeting">
 
         <LinearLayout
             android:id="@+id/ElementInnerScroll"

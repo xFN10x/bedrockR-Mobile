@@ -31,7 +31,7 @@ import fn10.bedrockr.addons.source.elementFiles.WorkspaceFile;
 import fn10.bedrockr.utils.RFileOperations;
 import fn10.bedrockrmobile.R;
 
-public class NewAddonActivity extends AppCompatActivity {
+public class RNewAddonActivity extends AppCompatActivity {
 
     private static final String key = "NewAddonActivity";
     private Bitmap selectedImg = null;

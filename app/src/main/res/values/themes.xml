@@ -6,6 +6,14 @@
         <item name="android:colorAccent">@color/accentColor</item>
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorHint">@color/darkAccentColor</item>
+        <item name="android:windowBackground">@color/background</item>
         <item name="android:windowSplashScreenBackground">@color/background</item>
+    </style>
+
+    <style name="Theme.BedrockRMobile.AlertDialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:fontFamily">@font/font</item>
+        <item name="android:background">@color/background</item>
+        <item name="android:colorPrimary">@color/accentColor</item>
+        <item name="android:textColorPrimary">@color/white</item>
     </style>
 </resources>

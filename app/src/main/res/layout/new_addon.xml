@@ -85,7 +85,7 @@
                 android:background="@drawable/button"
                 android:ems="10"
                 android:hint="@string/addon_prefix"
-                android:inputType="text|textCapWords"
+                android:inputType="text|textNoSuggestions"
                 android:padding="15dp"
                 android:textColorHint="@color/accentColor"
                 android:textCursorDrawable="@color/white" />
@@ -100,7 +100,7 @@
                     android:id="@+id/minimumEngineVersionText"
                     android:layout_width="0dp"
                     android:layout_height="28sp"
-                    android:text="@string/mimimum_engine_version"
+                    android:text="@string/minimum_engine_version"
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     app:layout_constraintEnd_toEndOf="parent"

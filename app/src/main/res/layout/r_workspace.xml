@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/background"
@@ -58,13 +59,30 @@
         app:srcCompat="@drawable/build" />
 
     <ImageButton
+        android:id="@+id/launchMCAndBuild"
+        android:layout_width="60dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/button"
+        android:contentDescription="Launch Minecraft, and update the addon"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toTopOf="@+id/ElementScroll"
+        app:layout_constraintEnd_toStartOf="@+id/launchMCButton"
+        app:layout_constraintTop_toBottomOf="@+id/Toolbar"
+        app:srcCompat="@drawable/launchmcwimport" />
+
+    <ImageButton
         android:id="@+id/launchMCButton"
         android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/button"
         android:contentDescription="Launch Minecraft"
-        android:scaleType="fitXY"
+        android:scaleType="fitCenter"
         app:layout_constraintBottom_toTopOf="@+id/ElementScroll"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
