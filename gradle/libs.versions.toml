@@ -2,7 +2,7 @@
 agp = "8.13.2"
 commonsIo = "2.21.0"
 commonsLang3 = "3.20.0"
-githubBedrockr = "c8f34344ef"
+githubBedrockr = "d409a9ec74"
 gson = "2.13.2"
 guava = "33.5.0-android"
 junit = "4.13.2"

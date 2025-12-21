@@ -48,9 +48,10 @@
 
             <ImageView
                 android:id="@+id/addonIcon"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="311dp"
                 android:contentDescription="@string/addon_icon_description"
+                android:minHeight="45dp"
                 app:srcCompat="@drawable/defaulticon" />
 
             <androidx.appcompat.widget.AppCompatButton
@@ -59,6 +60,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:background="@drawable/button"
+                android:minHeight="48dp"
                 android:text="@string/select_icon"
                 android:textAllCaps="false" />
 
@@ -105,7 +107,8 @@
                     android:textSize="20sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="TextSizeCheck" />
 
                 <Spinner
                     android:id="@+id/minimumEngineVersionSpinner"
@@ -145,7 +148,7 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="24dp"
                 android:background="@drawable/button"
-                android:text="Create Addon!"
+                android:text="@string/create_addon_text"
                 android:textAllCaps="false"
                 android:textSize="20sp" />
 

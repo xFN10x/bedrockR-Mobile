@@ -69,7 +69,9 @@ public class RWorkspaceViewActivity extends AppCompatActivity {
         ImageButton updateAddonAndPlayButton = findViewById(R.id.launchMCAndBuild);
 
         launchMCButton.setOnClickListener(v -> {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("minecraft:///")));
+            Intent minecraftImportIntent = new Intent(Intent.ACTION_VIEW);
+            minecraftImportIntent.setPackage("com.mojang.minecraftpe");
+            startActivity(minecraftImportIntent);
         });
 
         updateAddonAndPlayButton.setOnClickListener(v -> {
@@ -88,6 +90,10 @@ public class RWorkspaceViewActivity extends AppCompatActivity {
 
                 swf.getSerilized().BPVersion = currentStringVersion;
                 swf.getSerilized().RPVersion = currentStringVersion;
+
+                swf.getSerilized().RPSuffix = " RP (v" + currentBuildVersion + ")";
+                swf.getSerilized().BPSuffix = " BP (v" + currentBuildVersion + ")";
+
                 swf.buildJSONFile(swf.workspaceName());
 
                 buildElements(false, () -> {

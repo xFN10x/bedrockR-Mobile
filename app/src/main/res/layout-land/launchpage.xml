@@ -13,14 +13,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="8dp"
         android:fontFamily="@font/font"
-        android:text="welcome back"
         android:textColor="@color/white"
         android:textSize="24sp"
         android:theme="@style/Theme.BedrockRMobile"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/ElementScroll"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Toolbar" />
 
@@ -29,18 +27,17 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
         android:fontFamily="@font/font"
-        android:text="@string/other_greeting"
+        android:text="@string/other_greeting_alt"
         android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="italic"
         android:theme="@style/Theme.BedrockRMobile"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintEnd_toStartOf="@+id/ElementScroll"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newAddonButton" />
+        app:layout_constraintTop_toBottomOf="@+id/greetingText" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/Toolbar"
@@ -55,19 +52,18 @@
 
     <ScrollView
         android:id="@+id/ElementScroll"
-        android:layout_width="0dp"
+        android:layout_width="400dp"
         android:layout_height="0dp"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/addon_selector"
+        android:contentDescription="@string/element_scroll_description"
         android:padding="5dp"
         android:theme="@style/Theme.BedrockRMobile"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/otherGreeting">
+        app:layout_constraintTop_toBottomOf="@+id/Toolbar">
 
         <LinearLayout
             android:id="@+id/ElementInnerScroll"
@@ -83,17 +79,32 @@
     <ImageButton
         android:id="@+id/newAddonButton"
         android:layout_width="0dp"
-        android:layout_height="70dp"
-        android:layout_marginStart="24dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/button"
         android:contentDescription="@string/new_addon_context"
         android:scaleType="fitCenter"
         android:src="@drawable/newsymbol"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintEnd_toStartOf="@+id/ElementScroll"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/greetingText" />
+        app:layout_constraintTop_toBottomOf="@+id/otherGreeting" />
+
+    <TextView
+        android:id="@+id/versionText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/version_text"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="11sp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/ElementScroll"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

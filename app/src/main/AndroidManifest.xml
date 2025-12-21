@@ -24,8 +24,7 @@
         </provider>
         <activity
             android:name=".Launcher"
-            android:exported="true"
-            android:screenOrientation="portrait">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -34,8 +33,7 @@
 
         <activity
             android:name=".activity.RNewAddonActivity"
-            android:exported="true"
-            android:screenOrientation="portrait">
+            android:exported="true">
             <intent-filter>
                 <action android:name="bedrockrmobile.intent.CREATE" />
 

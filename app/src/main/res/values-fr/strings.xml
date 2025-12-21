@@ -2,7 +2,8 @@
 <resources>
     <string name="app_name">bedrockR Mobile</string>
     <string name="other_greeting">Bienvenue sur bedrockR Mobile! Vos espaces de travail se trouvent ci-dessous. Vous n’en avez pas ? Créez-en un à l’aide du bouton ci-dessus.</string>
-    <string name="new_addon_context">Bouton pour créer une nouvelle extension</string>
+    <string name="other_greeting_alt">Bienvenue sur bedrockR Mobile! Vos espaces de travail se trouvent à droite. Vous n’en avez pas ? Créez-en un à l’aide du bouton ci-dessous.</string>
+    <string name="new_addon_context">Créer une nouvelle extension</string>
     <string name="addon_icon_description">L\'icône d\'extension</string>
     <string name="select_icon">Sélectionnez une icône...</string>
     <string name="addon_description">Description de l\'extension</string>
@@ -17,12 +18,8 @@
     <string name="add_resource_description">Ajouter une ressource à l\'extension</string>
     <string name="load_addon">Ouvrez l\'espace de travail de l\'extension</string>
     <string name="build_elements">Créer l\'extension</string>
-    <string name="mc_sync_permission_ask">a</string>
-    <string name="mc_sync_success">a</string>
-    <string name="mc_sync_failure_desc">a</string>
     <string name="mc_sync_failure">Le dossier de Minecraft est introuvable.</string>
     <string name="build_success">La création de l\'extension a été un succès.</string>
-    <string name="mc_sync_ask">a</string>
     <string name="workspace_not_found">L\'espace de travail est introuvable.</string>
     <string name="workspace_failed">L\'espace de travail n\'a pas pu être chargé.</string>
     <string name="workspace_not_found_details">L\'espace de travail %1$s est introuvable sur le disque.</string>
@@ -33,5 +30,5 @@
     <string name="launch_minecraft_description">Lancez Minecraft</string>
     <string name="needs_permissions">Authentication required</string>
     <string name="re_build_workspace_description">Recréer l\'extension</string>
-    <string name="mc_sync_desc">a</string>
+    <string name="version_text">bedrockR Mobile version a1.0, basée sur bedrockR version a2.0. Créée par xFN10x</string>
 </resources>

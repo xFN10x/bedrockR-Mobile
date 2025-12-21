@@ -1,9 +1,10 @@
 <resources>
     <string name="app_name">bedrockR Mobile</string>
     <string name="other_greeting">Welcome to bedrockR Mobile! Below are your addons. Have none? Create a one with the button above.</string>
-    <string name="new_addon_context">Button to create new addon</string>
+    <string name="other_greeting_alt">Welcome to bedrockR Mobile! To the side are your addons. Have none? Create a one with the button below.</string>
+    <string name="new_addon_context">Create new addon</string>
     <string name="addon_icon_description">Your addon\'s icon</string>
-    <string name="select_icon">Select Icon...</string>
+    <string name="select_icon">Select Icon…</string>
     <string name="back_arrow" translatable="false"><![CDATA[<]]></string>
     <string name="addon_description">Addon Description</string>
     <string name="minimum_engine_version">Minimum Engine Version</string>
@@ -14,15 +15,15 @@
     <string name="workspace_not_found">Workspace not found.</string>
     <string name="workspace_failed">Workspace failed to load.</string>
     <string name="workspace_not_found_details">The workspace %1$s was not found on the disk.</string>
-    <string name="default_loading">Loading...</string>
+    <string name="default_loading">Loading…</string>
     <string name="build_failed">Failed to build</string>
     <string name="build_success">Finished Build</string>
-    <string name="mc_sync_ask">Enable Minecraft Sync\?</string>
+    <string name="mc_sync_ask" translatable="false">Enable Minecraft Sync\?</string>
     <string name="needs_permissions">Permissions Needed</string>
-    <string name="mc_sync_desc">This project does not currently have Minecraft Sync enabled. Minecraft Sync automatically copies your built project files into com.mojang, so you can build, and playtest without needing to restart the game. \n\n WARNING: You need to set your storage mode to External in Minecraft, or bedrockR cannot access Minecraft\'s files.</string>
-    <string name="mc_sync_permission_ask">To use Minecraft Sync, bedrockR Mobile needs access to Minecraft\'s files. Do you want to grant those permissions\?</string>
-    <string name="mc_sync_success">Minecraft Sync is now enabled. You only need to reload your world to test now! (after you build of course!)</string>
-    <string name="mc_sync_failure_desc">Failed to enable MC sync. Do you have the game installed? If you do, report this as a bug. Disabling Minecraft sync.</string>
+    <string name="mc_sync_desc" translatable="false">This project does not currently have Minecraft Sync enabled. Minecraft Sync automatically copies your built project files into com.mojang, so you can build, and playtest without needing to restart the game. \n\n WARNING: You need to set your storage mode to External in Minecraft, or bedrockR cannot access Minecraft\'s files.</string>
+    <string name="mc_sync_permission_ask" translatable="false">To use Minecraft Sync, bedrockR Mobile needs access to Minecraft\'s files. Do you want to grant those permissions\?</string>
+    <string name="mc_sync_success" translatable="false">Minecraft Sync is now enabled. You only need to reload your world to test now! (after you build of course!)</string>
+    <string name="mc_sync_failure_desc" translatable="false">Failed to enable MC sync. Do you have the game installed? If you do, report this as a bug. Disabling Minecraft sync.</string>
     <string name="mc_sync_failure">com.mojang not found.</string>
     <string name="affirm">Yes</string>
     <string name="acknowledge">OK</string>
@@ -34,4 +35,6 @@
     <string name="launch_minecraft_and_update_the_addon_description">Launch Minecraft, and update the addon</string>
     <string name="launch_minecraft_description">Launch Minecraft</string>
     <string name="re_build_workspace_description">Re-Build Workspace</string>
+    <string name="version_text">bedrockR Mobile version a1.0, based on bedrockR version a2.0. Created by xFN10x</string>
+    <string name="create_addon_text">Create Addon!</string>
 </resources>

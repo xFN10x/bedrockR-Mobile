@@ -4,8 +4,6 @@
     <files-path
         name="files"
         path="." />
-    
-
 
     <!-- App cache (optional) -->
     <cache-path
