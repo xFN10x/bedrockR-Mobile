@@ -1,28 +1,38 @@
 package fn10.bedrockrmobile.activity;
 
 import android.content.Intent;
+import android.graphics.drawable.Icon;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.FileProvider;
 
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
 import fn10.bedrockr.addons.source.SourceWorkspaceFile;
 import fn10.bedrockr.addons.source.elementFiles.GlobalBuildingVariables;
+import fn10.bedrockr.addons.source.interfaces.ElementDetails;
 import fn10.bedrockr.addons.source.interfaces.ElementFile;
+import fn10.bedrockr.addons.source.interfaces.ElementSource;
 import fn10.bedrockr.utils.RFileOperations;
 import fn10.bedrockrmobile.R;
 import fn10.bedrockrmobile.dialog.RLoadingDialog;
@@ -299,5 +309,32 @@ public class RWorkspaceViewActivity extends AppCompatActivity {
                 throw new RuntimeException(e);
             }
         }).start();
+    }
+
+    public void refreshElements() {
+        LinearLayout InnerScroll = findViewById(R.id.ElementInnerScroll);
+        for (ElementFile<?> file : RFileOperations.getElementsFromWorkspace(swf.workspaceName())) {
+            ConstraintLayout RElement = (ConstraintLayout) LayoutInflater.from(this).inflate(R.layout.rworkspaceelement, null);
+            Class<? extends ElementSource<?>> sourceElementClass = file.getSourceClass();
+
+            ElementDetails details;
+            try {
+                details = (ElementDetails) sourceElementClass.getMethod("getDetails", null).invoke(null, null);
+            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                throw new RuntimeException(e);
+            }
+
+            ImageView elementIcon = (ImageView) RElement.findViewById(R.id.elementIcon);
+            TextView elementDescription = (TextView) RElement.findViewById(R.id.elementDescription);
+            TextView elementName = (TextView) RElement.findViewById(R.id.elementName);
+
+            assert details != null;
+            elementIcon.setImageIcon(Icon.createWithData(details.Icon, 0, details.Icon.length));
+
+            elementDescription.setText(RMFileOperations.parseHTMLBackIntoString(details.Description).replace("\n", " ").replace("  ", " "));
+            elementName.setText(file.getElementName());
+
+            InnerScroll.addView(RElement);
+        }
     }
 }

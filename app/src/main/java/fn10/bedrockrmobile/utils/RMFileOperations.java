@@ -46,4 +46,8 @@ public class RMFileOperations {
         return getBaseDirectory("build", "MCA").toPath().resolve(name + ".mcaddon");
     }
 
+    public static String parseHTMLBackIntoString(String html) {
+        return html.replace("<html>","").replace("</html>","").replace("<br>","\n").replace("<br />","\n");
+    }
+
 }

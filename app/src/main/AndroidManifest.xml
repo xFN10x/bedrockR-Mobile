@@ -65,6 +65,16 @@
             </intent-filter>
         </activity>
 
+
+        <activity
+            android:name=".activity.creationscreen.ItemElementCreationScreen"
+            android:exported="false">
+            <intent-filter>
+                <category android:name="bedrockrmobile.category.CREATION_SCREENS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>
