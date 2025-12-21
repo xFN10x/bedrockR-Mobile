@@ -8,6 +8,7 @@ import android.graphics.drawable.Icon;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -33,9 +34,10 @@ import fn10.bedrockrmobile.R;
 
 public class RNewAddonActivity extends AppCompatActivity {
 
-    private static final String key = "NewAddonActivity";
     private Bitmap selectedImg = null;
     private ImageView iconView;
+
+    private static final String tag = "NewAddonActivity";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,6 +50,16 @@ public class RNewAddonActivity extends AppCompatActivity {
         iconView = findViewById(R.id.addonIcon);
         Button newAddonButton = findViewById(R.id.createAddonButton);
         Button backButton = findViewById(R.id.backButton);
+        Spinner minimumEngineVersionSpinner = findViewById(R.id.minimumEngineVersionSpinner);
+
+        minimumEngineVersionSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, RFileOperations.PICKABLE_VERSIONS));
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
                 registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
@@ -81,12 +93,7 @@ public class RNewAddonActivity extends AppCompatActivity {
             }
         });
 
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+
 
         newAddonButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,12 +130,12 @@ public class RNewAddonActivity extends AppCompatActivity {
                     selectedImg.compress(Bitmap.CompressFormat.PNG, 100, stream);
                     byte[] byteArray = stream.toByteArray();
                     RFileOperations.createWorkspace(workspaceFile, ArrayUtils.toObject(byteArray));
-                    Log.i(key, "Created workspace at " + RFileOperations.getBaseDirectory().getAbsolutePath());
+                    Log.i(tag, "Created workspace at " + RFileOperations.getBaseDirectory().getAbsolutePath());
                     finish();
                     if (!fromNull)
                         selectedImg.recycle();
                 } catch (Exception e) {
-                    Log.e(key, "Failed to create workspace", e);
+                    Log.e(tag, "Failed to create workspace", e);
                 }
             }
         });

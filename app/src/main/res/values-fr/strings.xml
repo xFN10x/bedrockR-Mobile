@@ -31,4 +31,10 @@
     <string name="needs_permissions">Authentication required</string>
     <string name="re_build_workspace_description">Recréer l\'extension</string>
     <string name="version_text">bedrockR Mobile version a1.0, basée sur bedrockR version a2.0. Créée par xFN10x</string>
+    <string name="create_addon_text">Créez l\'extension!</string>
+    <string name="element_icon_context">Icône d\'élément</string>
+    <string name="edit_text">Modifier</string>
+    <string name="draft_text">Brouillon</string>
+    <string name="delete_text">Supprimer</string>
+    <string name="create_new_text">Créez un élément basé sur ceci...</string>
 </resources>

@@ -65,6 +65,14 @@ public class RWorkspaceViewActivity extends AppCompatActivity {
         ImageButton buildButton = findViewById(R.id.buildElementsButton);
         ImageButton rebuildButton = findViewById(R.id.reBuildButton);
         ImageButton updateAddonAndPlayButton = findViewById(R.id.launchMCAndBuild);
+        ImageButton newElementButton = findViewById(R.id.addElementButton);
+
+        newElementButton.setOnClickListener(v -> {
+            Intent intent1 = new Intent(Intent.ACTION_VIEW);
+            intent1.setAction("bedrockrmobile.intent.NEWELEMENT");
+            intent1.putExtra("wpname",swf.workspaceName());
+            startActivity(intent1);
+        });
 
         launchMCButton.setOnClickListener(v -> {
             Intent minecraftImportIntent = new Intent(Intent.ACTION_VIEW);

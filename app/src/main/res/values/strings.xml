@@ -37,4 +37,9 @@
     <string name="re_build_workspace_description">Re-Build Workspace</string>
     <string name="version_text">bedrockR Mobile version a1.0, based on bedrockR version a2.0. Created by xFN10x</string>
     <string name="create_addon_text">Create Addon!</string>
+    <string name="element_icon_context">Element\'s Icon</string>
+    <string name="edit_text">Edit</string>
+    <string name="draft_text">Draft</string>
+    <string name="delete_text">Delete</string>
+    <string name="create_new_text">Create New...</string>
 </resources>

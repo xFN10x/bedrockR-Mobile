@@ -54,6 +54,17 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".activity.RNewElementActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="bedrockrmobile.intent.NEWELEMENT" />
+
+                <category android:name="bedrockrmobile.category.ADDONS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

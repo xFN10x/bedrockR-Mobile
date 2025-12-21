@@ -12,6 +12,7 @@
         android:id="@+id/elementName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginEnd="5dp"
         android:textColor="@color/white"
         android:textSize="20sp"
@@ -36,6 +37,7 @@
         android:id="@+id/elementDescription"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:textColor="@color/white"
@@ -48,12 +50,34 @@
         android:id="@+id/editElementButton"
         android:layout_width="0dp"
         android:layout_height="50dp"
+        android:layout_marginStart="8dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/button"
-        android:text="@string/create_new_text"
+        android:text="@string/edit_text"
         android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/elementDescription"
-        app:layout_constraintStart_toEndOf="@+id/elementIcon" />
+        app:layout_constraintStart_toEndOf="@+id/draftElementButton" />
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/draftElementButton"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/button"
+        android:text="@string/draft_text"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="@+id/editElementButton"
+        app:layout_constraintStart_toEndOf="@+id/deleteElementButton" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/deleteElementButton"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/button"
+        android:text="@string/delete_text"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="@+id/editElementButton"
+        app:layout_constraintStart_toEndOf="@+id/elementIcon" />
 </androidx.constraintlayout.widget.ConstraintLayout>
