@@ -43,7 +43,7 @@ public class RNewAddonActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
-        setContentView(R.layout.new_addon);
+        setContentView(R.layout.rnewaddon);
         Button selectIconButton = findViewById(R.id.selectIconButton);
         iconView = findViewById(R.id.addonIcon);
         Button newAddonButton = findViewById(R.id.createAddonButton);

@@ -1,7 +1,6 @@
 package fn10.bedrockrmobile.activity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
@@ -20,7 +19,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 import fn10.bedrockr.addons.source.SourceWorkspaceFile;
 import fn10.bedrockr.addons.source.elementFiles.GlobalBuildingVariables;
@@ -41,7 +39,7 @@ public class RWorkspaceViewActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
-        setContentView(R.layout.r_workspace);
+        setContentView(R.layout.rworkspace);
 
         Intent intent = getIntent();
         File workspaceDiscFile = RFileOperations.getFileFromWorkspace(intent.getStringExtra(RMFileOperations.OPEN_WORKSPACE_EXTRA_NAME), RFileOperations.WPFFILENAME);

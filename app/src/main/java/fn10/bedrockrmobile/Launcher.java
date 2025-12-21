@@ -19,9 +19,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.io.File;
 import java.text.MessageFormat;
-import java.util.logging.Logger;
 
-import fn10.bedrockr.addons.source.SourceWorkspaceFile;
 import fn10.bedrockr.addons.source.elementFiles.WorkspaceFile;
 import fn10.bedrockr.utils.Greetings;
 import fn10.bedrockr.utils.RFileOperations;
@@ -49,7 +47,7 @@ public class Launcher extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupApp();
-        setContentView(R.layout.launchpage);
+        setContentView(R.layout.rlaunchpage);
 
         TextView greetingText = findViewById(R.id.greetingText);
 

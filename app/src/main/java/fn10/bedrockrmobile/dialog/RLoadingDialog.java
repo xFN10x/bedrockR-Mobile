@@ -17,7 +17,7 @@ public class RLoadingDialog extends AppCompatDialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         setCancelable(false);
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-        builder.setView(R.layout.r_loading_screen);
+        builder.setView(R.layout.rloadingscreen);
         AlertDialog dia = builder.create();
         dia.setCanceledOnTouchOutside(false);
         return dia;
