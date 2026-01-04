@@ -95,6 +95,7 @@
         android:background="@drawable/button"
         android:contentDescription="@string/open_wiki_description"
         android:scaleType="fitCenter"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/launchMCButton"
         app:layout_constraintEnd_toStartOf="@+id/launchMCButton"
         app:layout_constraintTop_toTopOf="@+id/launchMCButton"

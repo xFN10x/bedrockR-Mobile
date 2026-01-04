@@ -75,18 +75,15 @@ public class Launcher extends Activity {
 
             ConstraintLayout RAddon = (ConstraintLayout) LayoutInflater.from(this).inflate(R.layout.raddon, null);
 
-            ImageView addonBG = (ImageView) RAddon.findViewById(R.id.addonBackground);
-            TextView addonName = (TextView) RAddon.findViewById(R.id.addonName);
-            Button loadAddonButton = (Button) RAddon.findViewById(R.id.loadAddonButton);
+            ImageView addonBG = RAddon.findViewById(R.id.addonBackground);
+            TextView addonName = RAddon.findViewById(R.id.addonName);
+            Button loadAddonButton = RAddon.findViewById(R.id.loadAddonButton);
 
-            loadAddonButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent();
-                    intent.setAction("bedrockrmobile.intent.WORKSPACE");
-                    intent.putExtra(RMFileOperations.OPEN_WORKSPACE_EXTRA_NAME, wpName);
-                    startActivity(intent);
-                }
+            loadAddonButton.setOnClickListener(v -> {
+                Intent intent = new Intent();
+                intent.setAction("bedrockrmobile.intent.WORKSPACE");
+                intent.putExtra(RMFileOperations.OPEN_WORKSPACE_EXTRA_NAME, wpName);
+                startActivity(intent);
             });
             addonName.setText(wpName, TextView.BufferType.NORMAL);
             addonBG.setImageIcon(Icon.createWithContentUri(Uri.fromFile(RFileOperations.getFileFromWorkspace(wpName, "icon." + wpF.IconExtension))));

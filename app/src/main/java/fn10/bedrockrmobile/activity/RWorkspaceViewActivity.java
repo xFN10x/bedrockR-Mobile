@@ -14,7 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.FileProvider;
@@ -33,13 +32,16 @@ import fn10.bedrockr.addons.source.elementFiles.GlobalBuildingVariables;
 import fn10.bedrockr.addons.source.interfaces.ElementDetails;
 import fn10.bedrockr.addons.source.interfaces.ElementFile;
 import fn10.bedrockr.addons.source.interfaces.ElementSource;
+import fn10.bedrockr.interfaces.ElementCreationListener;
 import fn10.bedrockr.utils.RFileOperations;
 import fn10.bedrockrmobile.R;
+import fn10.bedrockrmobile.dialog.RAlertDialog;
 import fn10.bedrockrmobile.dialog.RLoadingDialog;
 import fn10.bedrockrmobile.utils.RMFileOperations;
 
-public class RWorkspaceViewActivity extends AppCompatActivity {
+public class RWorkspaceViewActivity extends AppCompatActivity implements ElementCreationListener {
 
+    public static RWorkspaceViewActivity currentActive;
     private static final String tag = "RWorkspace";
     private SourceWorkspaceFile swf;
 
@@ -57,17 +59,7 @@ public class RWorkspaceViewActivity extends AppCompatActivity {
         try {
             SWPF = new SourceWorkspaceFile(new String(Files.readAllBytes(workspaceDiscFile.toPath())));
         } catch (IOException e) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_BedrockRMobile_AlertDialog);
-            builder.setTitle(R.string.workspace_failed);
-            builder.setMessage(e.getMessage());
-            builder.setNeutralButton(R.string.acknowledge, (dialog, which) -> {
-                finish();
-            });
-
-            AlertDialog dio = builder.create();
-
-            dio.show();
-
+            RAlertDialog.showError(getResources(), getSupportFragmentManager(), R.string.workspace_failed);
             return;
         }
 
@@ -85,9 +77,13 @@ public class RWorkspaceViewActivity extends AppCompatActivity {
         });
 
         launchMCButton.setOnClickListener(v -> {
-            Intent minecraftImportIntent = new Intent(Intent.ACTION_VIEW);
-            minecraftImportIntent.setPackage("com.mojang.minecraftpe");
-            startActivity(minecraftImportIntent);
+            try {
+                Intent minecraftImportIntent = new Intent(Intent.ACTION_VIEW);
+                minecraftImportIntent.setPackage("com.mojang.minecraftpe");
+                startActivity(minecraftImportIntent);
+            } catch (Exception e) {
+                RAlertDialog.showError(getSupportFragmentManager(), getResources().getString(R.string.failed_launch));
+            }
         });
 
         updateAddonAndPlayButton.setOnClickListener(v -> {
@@ -110,30 +106,27 @@ public class RWorkspaceViewActivity extends AppCompatActivity {
                 swf.getSerilized().RPSuffix = " RP (v" + currentBuildVersion + ")";
                 swf.getSerilized().BPSuffix = " BP (v" + currentBuildVersion + ")";
 
-                swf.buildJSONFile(swf.workspaceName());
+                swf.saveJSONFile(swf.workspaceName());
 
                 buildElements(false, () -> {
-                    Intent minecraftImportIntent = new Intent(Intent.ACTION_VIEW);
-                    minecraftImportIntent.setData(FileProvider.getUriForFile(
-                            this,
-                            getPackageName() + ".provider",
-                            RMFileOperations.getMCAddonOfWorkspace(swf.workspaceName()).toFile()));
-                    minecraftImportIntent.setPackage("com.mojang.minecraftpe");
-                    minecraftImportIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    startActivity(minecraftImportIntent);
+                    try {
+                        Intent minecraftImportIntent = new Intent(Intent.ACTION_VIEW);
+                        minecraftImportIntent.setData(FileProvider.getUriForFile(
+                                this,
+                                getPackageName() + ".provider",
+                                RMFileOperations.getMCAddonOfWorkspace(swf.workspaceName()).toFile()));
+                        minecraftImportIntent.setPackage("com.mojang.minecraftpe");
+                        minecraftImportIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        startActivity(minecraftImportIntent);
+                    } catch (Exception e) {
+                        RAlertDialog.showError(getSupportFragmentManager(), getResources().getString(R.string.failed_launch));
+                    }
                 });
 
 
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-
-            /*startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
-                    "minecraft:///?importpack=" +
-                            RMFileOperations.BEDROCKR_PUBLIC_PATH.resolve("BP/"+swf.workspaceName()+" - BP.mcpack")
-                            //+ "&importpack=" +
-                            //RMFileOperations.BEDROCKR_PUBLIC_PATH.resolve("RP/"+swf.workspaceName()+" - RP.mcpack")
-                    )));*/
         });
 
 
@@ -145,17 +138,7 @@ public class RWorkspaceViewActivity extends AppCompatActivity {
                     finishedToast.show();
                 });
             } catch (IOException e) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_BedrockRMobile_AlertDialog);
-                builder.setTitle(R.string.build_failed);
-                builder.setMessage(e.getMessage());
-                builder.setNeutralButton(R.string.acknowledge, (dia, which) -> {
-                    dia.dismiss();
-                });
-
-                AlertDialog dio = builder.create();
-
-                dio.show();
-                return;
+                RAlertDialog.showError(getSupportFragmentManager(), e);
             }
 
         });
@@ -168,24 +151,14 @@ public class RWorkspaceViewActivity extends AppCompatActivity {
                     finishedToast.show();
                 });
             } catch (IOException e) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_BedrockRMobile_AlertDialog);
-                builder.setTitle(R.string.build_failed);
-                builder.setMessage(e.getMessage());
-                builder.setNeutralButton(R.string.acknowledge, (dia, which) -> {
-                    dia.dismiss();
-                });
-
-                AlertDialog dio = builder.create();
-
-                dio.show();
-                return;
+                RAlertDialog.showError(getSupportFragmentManager(), e);
             }
         });
 
         RFileOperations.setCurrentWorkspace(SWPF);
         swf = SWPF;
 
-        //checkMCSync(false);
+        refreshElements();
     }
 
     /*public void checkMCSync(boolean showMessage) {
@@ -262,7 +235,6 @@ public class RWorkspaceViewActivity extends AppCompatActivity {
      * Builds all the elements in the workspace.
      *
      * @param rebuild Specifies if the build folders should be deleted before the workspace is made
-     * @return The MCAddon created
      * @throws IOException If deleting the build folders fails
      */
     public void buildElements(boolean rebuild, Runnable whenDone) throws IOException {
@@ -336,5 +308,25 @@ public class RWorkspaceViewActivity extends AppCompatActivity {
 
             InnerScroll.addView(RElement);
         }
+        currentActive = this;
+    }
+
+    @Override
+    public void onElementCreate(ElementSource<?> element) {
+        element.getSerilized().setDraft(false);
+
+        refreshElements();
+    }
+
+    @Override
+    public void onElementDraft(ElementSource<?> element) {
+        element.getSerilized().setDraft(true);
+
+        refreshElements();
+    }
+
+    @Override
+    public void onElementCancel() {
+        refreshElements();
     }
 }

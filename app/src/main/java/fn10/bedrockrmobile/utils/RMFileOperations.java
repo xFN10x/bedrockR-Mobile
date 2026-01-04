@@ -8,15 +8,18 @@ import net.lingala.zip4j.ZipFile;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Files operations specifically for android.
  */
 public class RMFileOperations {
 
-    public static final Path BEDROCKR_PUBLIC_PATH = Path.of(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath(), "bedrockR");
+    public static final Path BEDROCKR_PUBLIC_PATH = Paths.get(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath(), "bedrockR");
     public static final String OPEN_WORKSPACE_EXTRA_NAME = "workspaceName";
     private static final String tag = "RMFileOperations";
+
+
 
     /**
      * Creates MCAddons into build/MCA, by pairing the RP and BP with the workspaceName

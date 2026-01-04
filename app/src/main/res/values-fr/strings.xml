@@ -37,4 +37,8 @@
     <string name="draft_text">Brouillon</string>
     <string name="delete_text">Supprimer</string>
     <string name="create_new_text">Créez un élément basé sur ceci...</string>
+    <string name="field_help_button_context">Obtenez de l\'aide concernant cette valeur</string>
+    <string name="value_hint">…</string>
+    <string name="create_text">Créez l\'élément</string>
+    <string name="failed_launch">Impossible de lancer Minecraft, est-il installé?</string>
 </resources>

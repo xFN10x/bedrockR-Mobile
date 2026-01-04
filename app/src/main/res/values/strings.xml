@@ -41,5 +41,9 @@
     <string name="edit_text">Edit</string>
     <string name="draft_text">Draft</string>
     <string name="delete_text">Delete</string>
-    <string name="create_new_text">Create New...</string>
+    <string name="create_new_text">Create New…</string>
+    <string name="field_help_button_context">Get help for this field</string>
+    <string name="value_hint">…</string>
+    <string name="create_text">Create</string>
+    <string name="failed_launch">Couldn\'t launch Minecraft, is it installed?</string>
 </resources>

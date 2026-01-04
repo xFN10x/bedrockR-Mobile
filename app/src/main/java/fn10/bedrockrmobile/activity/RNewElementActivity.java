@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.drawable.Icon;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -16,7 +15,6 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Objects;
 
 import fn10.bedrockr.addons.source.SourceBiomeElement;
 import fn10.bedrockr.addons.source.SourceBlockElement;
@@ -28,10 +26,9 @@ import fn10.bedrockr.addons.source.interfaces.ElementDetails;
 import fn10.bedrockr.addons.source.interfaces.ElementSource;
 import fn10.bedrockr.interfaces.ElementCreationListener;
 import fn10.bedrockrmobile.R;
-import fn10.bedrockrmobile.activity.creationscreen.RMElementCreationScreen;
 import fn10.bedrockrmobile.utils.RMFileOperations;
 
-public class RNewElementActivity extends AppCompatActivity implements ElementCreationListener {
+public class RNewElementActivity extends AppCompatActivity {
 
     public static final Class<? extends ElementSource<?>>[] ELEMENTS = new Class[]{
             SourceItemElement.class,
@@ -51,7 +48,6 @@ public class RNewElementActivity extends AppCompatActivity implements ElementCre
         }
         setContentView(R.layout.rnewelement);
 
-        RMElementCreationScreen.creationListener = this;
 
         Button backButton = findViewById(R.id.backButton);
         LinearLayout InnerScroll = findViewById(R.id.innerScroll);
@@ -80,15 +76,12 @@ public class RNewElementActivity extends AppCompatActivity implements ElementCre
             AppCompatButton elementCreationButton = RElement.findViewById(R.id.editElementButton);
 
             elementCreationButton.setOnClickListener(v -> {
-                try {
-                    Class<? extends RMElementCreationScreen<?>> rmecs = RMElementCreationScreen.getCreationScreenFromElementSourceClass(elementClass, this);
-                    assert rmecs != null;
-                    startActivity(new Intent(this, rmecs));
-                    //.startActivity(new Intent().setAction(Intent.ACTION_VIEW));
-                } catch (NoSuchMethodException | InvocationTargetException |
-                         IllegalAccessException | InstantiationException e) {
-                    throw new RuntimeException(e);
-                }
+                RMElementCreationScreen.setCreationListener(RWorkspaceViewActivity.currentActive);
+
+                Intent creationScreenIntent = new Intent();
+                creationScreenIntent.setAction("bedrockrmobile.intent.CREATEELEMENT")
+                        .putExtra("ElementSource", elementClass);
+                startActivity(creationScreenIntent);
             });
 
             InnerScroll.addView(RElement);
@@ -96,16 +89,4 @@ public class RNewElementActivity extends AppCompatActivity implements ElementCre
 
     }
 
-    @Override
-    public void onElementCreate(ElementSource<?> element) {
-
-    }
-
-    @Override
-    public void onElementDraft(ElementSource<?> element) {
-
-    }
-
-    @Override
-    public void onElementCancel() {}
 }

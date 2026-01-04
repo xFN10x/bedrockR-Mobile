@@ -6,7 +6,6 @@ plugins {
 
 android {
     namespace = "fn10.bedrockrmobile"
-
     compileSdk = 36
 
     packaging {
@@ -19,16 +18,16 @@ android {
 
     defaultConfig {
         applicationId = "fn10.bedrockrmobile"
-        minSdk = 34
+        minSdk = 27
         targetSdk = 36
         versionCode = 1
-        versionName = "a1.0 (a2.0)"
+        versionName = "Ma1.0 (a2.0)"
 
         multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         ndk {
-            abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86_64")
+            abiFilters += listOf("x86", "armeabi-v7a", "arm64-v8a", "x86_64")
         }
     }
 
@@ -43,14 +42,14 @@ android {
     }
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     buildFeatures {
         compose = true
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
 }
 

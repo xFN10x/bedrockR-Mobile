@@ -2,6 +2,8 @@
 <resources>
     <color name="accentColor">#4cff00</color>
     <color name="darkAccentColor">#004205</color>
+    <color name="hintColourEnabled">#4f4f4f</color>
+    <color name="hintColourDisabled">#254728</color>
     <color name="background">#202020</color>
     <color name="lighterBackground">#303030</color>
     <color name="white">#FFFFFFFF</color>
