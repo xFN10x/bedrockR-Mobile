@@ -3,7 +3,6 @@ package fn10.bedrockrmobile.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
-import android.text.InputType;
 import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,7 +20,6 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.IntentCompat;
 
-import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -31,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import fn10.bedrockr.addons.source.FieldFilters;
@@ -49,8 +46,8 @@ public class RMElementCreationScreen extends AppCompatActivity {
     private static ElementCreationListener creationListener = null;
     private static final String tag = "NewAddonActivity";
 
-    private List<Field> Fields = new ArrayList<>();
-    private Map<Field, View> FieldRElementValues = new HashMap<>();
+    private final List<Field> Fields = new ArrayList<>();
+    private final Map<Field, View> FieldRElementValues = new HashMap<>();
 
     public static void setCreationListener(ElementCreationListener listener) {
         creationListener = listener;
@@ -110,19 +107,27 @@ public class RMElementCreationScreen extends AppCompatActivity {
             if (elementFileClass instanceof Class<?>) {
                 // lets see how optimized and clean i can make this
                 // (not very much apparently)
-                Field[] fields = ((Class<?>) elementFileClass).getFields();
+                List<Field> fields = new ArrayList<>(List.of(((Class<?>) elementFileClass).getFields()));
+                fields.sort((f1, f2) -> {
+                    int o1 = f1.isAnnotationPresent(RAnnotation.Order.class)
+                            ? f1.getAnnotation(RAnnotation.Order.class).value()
+                            : -1;
+                    int o2 = f2.isAnnotationPresent(RAnnotation.Order.class)
+                            ? f2.getAnnotation(RAnnotation.Order.class).value()
+                            : -1;
+                    return Integer.compare(o1, o2);
+                });
 
-
+                Log.i(tag, "Fields found: ");
                 for (Field field : fields) {
-                    Fields.add(field);
+                    Log.i(tag, field.getName());
 
                     if (field.getType().equals(CreationScreenSeperator.class)) {
-                        View divider = LayoutInflater.from(this).inflate(R.layout.rcreationscreen_div, null);
-
-                        InnerScroll.addView(divider);
+                        LayoutInflater.from(this).inflate(R.layout.rcreationscreen_div, InnerScroll);
                         continue;
                     }
 
+                    Fields.add(field);
 
                     if (field.isAnnotationPresent(RAnnotation.UneditableByCreation.class))
                         continue;
@@ -133,7 +138,7 @@ public class RMElementCreationScreen extends AppCompatActivity {
                         //if its a string
                         if (!field.isAnnotationPresent(RAnnotation.StringDropdownField.class)) {
                             //normal
-                            ConstraintLayout ElementValue = (ConstraintLayout) LayoutInflater.from(this.peekAvailableContext()).inflate(R.layout.string_relementvalue, null);
+                            View ElementValue = LayoutInflater.from(this.peekAvailableContext()).inflate(R.layout.string_relementvalue, null);
 
                             TextView fieldName = ElementValue.findViewById(R.id.fieldNameTextView);
                             EditText fieldInput = ElementValue.findViewById(R.id.fieldBox);
@@ -169,7 +174,6 @@ public class RMElementCreationScreen extends AppCompatActivity {
                             }
 
                             enabledCheck.setOnCheckedChangeListener((b, checked) -> fieldInput.setEnabled(checked));
-
                             InnerScroll.addView(ElementValue);
                         } else {
                             //dropdown
@@ -177,7 +181,7 @@ public class RMElementCreationScreen extends AppCompatActivity {
 
 
                     } else if (Integer.class.isAssignableFrom(InputType) || int.class.isAssignableFrom(InputType) || Float.class.isAssignableFrom(InputType) || float.class.isAssignableFrom(InputType)) {
-                        ConstraintLayout ElementValue = (ConstraintLayout) LayoutInflater.from(this).inflate(R.layout.number_relementvalue, null);
+                        View ElementValue = LayoutInflater.from(this).inflate(R.layout.number_relementvalue, null);
 
                         TextView fieldName = ElementValue.findViewById(R.id.fieldNameTextView);
                         EditText fieldInput = ElementValue.findViewById(R.id.fieldBox);
@@ -270,8 +274,19 @@ public class RMElementCreationScreen extends AppCompatActivity {
             });
 
             draftButton.setOnClickListener(v -> {
-                //creationListener.onElementDraft();
-                finish();
+                ElementSource<?> es;
+                if ((es = create(true)) != null) {
+                    creationListener.onElementDraft(es);
+                    finish();
+                }
+            });
+
+            createButton.setOnClickListener(v -> {
+                ElementSource<?> es;
+                if ((es = create(false)) != null) {
+                    creationListener.onElementCreate(es);
+                    finish();
+                }
             });
         }
     }
@@ -294,6 +309,7 @@ public class RMElementCreationScreen extends AppCompatActivity {
         public static FieldValidReturn of(boolean bool, String reasonIfFalse) {
             return new FieldValidReturn(bool, reasonIfFalse);
         }
+
         public static FieldValidReturn False(String reason) {
             return new FieldValidReturn(false, reason);
         }
@@ -310,8 +326,12 @@ public class RMElementCreationScreen extends AppCompatActivity {
         String Target = field.getName();
         log.info("================== Checking field " + field.getName() + "... ==================");
         Class<?> InputType = field.getType();
-
-        View InputView = Objects.requireNonNull(FieldRElementValues.get(field)).findViewById(R.id.fieldBox);
+        View RElementValue = FieldRElementValues.get(field);
+        if (RElementValue == null) {
+            Log.w(tag, "Field: " + field.getName() + " doesn't have a RElementValue.");
+            return FieldValidReturn.False("No ElementValue to validate.");
+        }
+        View InputView = RElementValue.findViewById(R.id.fieldBox);
 
         if (!strict) {
             if (field.getAnnotation(RAnnotation.VeryImportant.class) == null) {
@@ -387,8 +407,16 @@ public class RMElementCreationScreen extends AppCompatActivity {
     }
 
 
-    public void create(boolean draft) {
-
+    /**
+     * Take the fields and turn them into an ElementSource with the contracted ElementFile.
+     *
+     * @param draft Specifies if this is creating into a draft or not.
+     * @return the created ElementSource, or null if it fails.
+     */
+    public ElementSource<?> create(boolean draft) {
+        for (Field field : Fields) {
+            isFieldValid(field, !draft);
+        }
+        return null;
     }
-
 }
