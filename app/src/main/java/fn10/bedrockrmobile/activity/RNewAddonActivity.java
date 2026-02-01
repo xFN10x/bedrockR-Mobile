@@ -1,6 +1,7 @@
 package fn10.bedrockrmobile.activity;
 
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.ImageDecoder;
 import android.graphics.drawable.BitmapDrawable;
@@ -30,6 +31,7 @@ import java.util.Objects;
 import fn10.bedrockr.addons.source.FieldFilters;
 import fn10.bedrockr.addons.source.elementFiles.WorkspaceFile;
 import fn10.bedrockr.utils.RFileOperations;
+import fn10.bedrockrmobile.Launcher;
 import fn10.bedrockrmobile.R;
 
 public class RNewAddonActivity extends AppCompatActivity {
@@ -52,19 +54,14 @@ public class RNewAddonActivity extends AppCompatActivity {
         Button backButton = findViewById(R.id.backButton);
         Spinner minimumEngineVersionSpinner = findViewById(R.id.minimumEngineVersionSpinner);
 
-        minimumEngineVersionSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, RFileOperations.PICKABLE_VERSIONS));
+        minimumEngineVersionSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, RFileOperations.PICKABLE_VERSIONS));
 
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        backButton.setOnClickListener(v -> finish());
 
         ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
                 registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
                     if (uri != null) {
-                        BitmapDrawable d = null;
+                        BitmapDrawable d;
                         try {
                             ImageDecoder.Source source = ImageDecoder.createSource(getContentResolver(), uri);
                             Bitmap bitmap = ImageDecoder.decodeBitmap(source);
@@ -86,57 +83,51 @@ public class RNewAddonActivity extends AppCompatActivity {
 
         iconView.setImageIcon(Icon.createWithResource(this, R.drawable.defaulticon));
 
-        selectIconButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pickMedia.launch(new PickVisualMediaRequest.Builder().setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE).build());
+        selectIconButton.setOnClickListener(v -> pickMedia.launch(new PickVisualMediaRequest.Builder().setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE).build()));
+
+
+        newAddonButton.setOnClickListener(v -> {
+            EditText addonNameBox = findViewById(R.id.addonNameBox);
+            EditText addonPrefixBox = findViewById(R.id.addonPrefixBox);
+            EditText addonDescriptionBox = findViewById(R.id.addonDescriptionBox);
+
+            FieldFilters.FileNameLikeStringFilter fnlsf = new FieldFilters.FileNameLikeStringFilter();
+            FieldFilters.IDStringFilter idsf = new FieldFilters.IDStringFilter();
+
+            String name = addonNameBox.getText().toString();
+            String prefix = addonPrefixBox.getText().toString();
+            String mev = minimumEngineVersionSpinner.getSelectedItem().toString();
+            String description = addonDescriptionBox.getText().toString();
+
+            if (
+                    name.isEmpty() || prefix.isEmpty() || mev.isEmpty() || description.isEmpty() ||
+                            !fnlsf.getValid(name) || !idsf.getValid(prefix) || !fnlsf.getValid(description)
+            ) {
+                return;
             }
-        });
 
 
+            WorkspaceFile workspaceFile = new WorkspaceFile(name, mev, description, "png", prefix);
 
-        newAddonButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EditText addonNameBox = findViewById(R.id.addonNameBox);
-                EditText addonPrefixBox = findViewById(R.id.addonPrefixBox);
-                Spinner addonMEV = findViewById(R.id.minimumEngineVersionSpinner);
-                EditText addonDescriptionBox = findViewById(R.id.addonDescriptionBox);
-
-                FieldFilters.FileNameLikeStringFilter fnlsf = new FieldFilters.FileNameLikeStringFilter();
-                FieldFilters.IDStringFilter idsf = new FieldFilters.IDStringFilter();
-
-                String name = addonNameBox.getText().toString();
-                String prefix = addonPrefixBox.getText().toString();
-                String mev = addonMEV.getSelectedItem().toString();
-                String description = addonDescriptionBox.getText().toString();
-
-                if (
-                        name.isEmpty() || prefix.isEmpty() || mev.isEmpty() || description.isEmpty() ||
-                                !fnlsf.getValid(name) || !idsf.getValid(prefix) || !fnlsf.getValid(description)
-                ) {
-                    return;
+            try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
+                boolean fromNull = false;
+                if (selectedImg == null) {
+                    fromNull = true;
+                    selectedImg = ((BitmapDrawable) Objects.requireNonNull(ResourcesCompat.getDrawable(getResources(), R.drawable.defaulticon, null))).getBitmap();
                 }
-
-
-                WorkspaceFile workspaceFile = new WorkspaceFile(name, mev, description, "png", prefix);
-
-                try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
-                    boolean fromNull = false;
-                    if (selectedImg == null) {
-                        fromNull = true;
-                        selectedImg = ((BitmapDrawable) Objects.requireNonNull(ResourcesCompat.getDrawable(getResources(), R.drawable.defaulticon, null))).getBitmap();
-                    }
-                    selectedImg.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                    byte[] byteArray = stream.toByteArray();
-                    RFileOperations.createWorkspace(workspaceFile, ArrayUtils.toObject(byteArray));
-                    Log.i(tag, "Created workspace at " + RFileOperations.getBaseDirectory().getAbsolutePath());
-                    finish();
-                    if (!fromNull)
-                        selectedImg.recycle();
-                } catch (Exception e) {
-                    Log.e(tag, "Failed to create workspace", e);
+                selectedImg.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] byteArray = stream.toByteArray();
+                RFileOperations.createWorkspace(workspaceFile, ArrayUtils.toObject(byteArray));
+                Log.i(tag, "Created workspace at " + RFileOperations.getBaseDirectory().getAbsolutePath());
+                Activity parent = getParent();
+                if (parent instanceof Launcher) {
+                    ((Launcher) parent).reloadWorkspaces();
                 }
+                finish();
+                if (!fromNull)
+                    selectedImg.recycle();
+            } catch (Exception e) {
+                Log.e(tag, "Failed to create workspace", e);
             }
         });
 

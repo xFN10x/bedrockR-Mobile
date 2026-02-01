@@ -14,7 +14,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.io.File;
@@ -27,8 +31,13 @@ import fn10.bedrockr.utils.SettingsFile;
 import fn10.bedrockrmobile.utils.CompatGreetings;
 import fn10.bedrockrmobile.utils.RMFileOperations;
 
-public class Launcher extends Activity {
+public class Launcher extends AppCompatActivity {
 
+    private LinearLayout RAddonInnerScroll;
+
+    private final ActivityResultLauncher<Intent> activityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        reloadWorkspaces();
+    });
     public static final String VERSION = "a1.0";
     private static final String tag = "Launcher";
 
@@ -48,7 +57,7 @@ public class Launcher extends Activity {
         super.onCreate(savedInstanceState);
         setupApp();
         setContentView(R.layout.rlaunchpage);
-
+        RAddonInnerScroll = findViewById(R.id.ElementInnerScroll);
         TextView greetingText = findViewById(R.id.greetingText);
 
         Greetings.Greeting greeting = CompatGreetings.GetGreeting();
@@ -63,12 +72,16 @@ public class Launcher extends Activity {
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setAction("bedrockrmobile.intent.CREATE");
-                startActivity(intent);
+                activityLauncher.launch(intent);
             }
         });
 
-        LinearLayout RAddonInnerScroll = findViewById(R.id.ElementInnerScroll);
+        reloadWorkspaces();
+    }
 
+    public void reloadWorkspaces() {
+        Log.i(tag, "Reloading workspaces...");
+        RAddonInnerScroll.removeAllViews();
         for (String wpName : RFileOperations.getWorkspaces()) {
             Log.i(tag, "Found workspace: " + wpName);
             WorkspaceFile wpF = RFileOperations.getWorkspaceFile(wpName);
