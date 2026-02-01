@@ -18,7 +18,7 @@ android {
 
     defaultConfig {
         applicationId = "fn10.bedrockrmobile"
-        minSdk = 27
+        minSdk = 28
         targetSdk = 36
         versionCode = 1
         versionName = "Ma1.0 (a2.0)"

@@ -17,20 +17,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
+    <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/fieldBox"
         android:layout_width="0dp"
         android:layout_height="55dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:allowClickWhenDisabled="false"
-        android:autofillHints=""
         android:background="@drawable/button"
         android:clickable="true"
-        android:ems="10"
         android:enabled="true"
-        android:hint="@string/value_hint"
-        android:inputType="text"
         android:padding="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/helpFieldButton"

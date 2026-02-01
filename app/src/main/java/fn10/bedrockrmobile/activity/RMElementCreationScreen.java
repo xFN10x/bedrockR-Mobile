@@ -7,11 +7,14 @@ import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.SimpleAdapter;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -127,10 +130,11 @@ public class RMElementCreationScreen extends AppCompatActivity {
                         continue;
                     }
 
-                    Fields.add(field);
 
                     if (field.isAnnotationPresent(RAnnotation.UneditableByCreation.class))
                         continue;
+
+                    Fields.add(field);
 
                     Class<?> InputType = field.getType();
 
@@ -180,7 +184,8 @@ public class RMElementCreationScreen extends AppCompatActivity {
                         }
 
 
-                    } else if (Integer.class.isAssignableFrom(InputType) || int.class.isAssignableFrom(InputType) || Float.class.isAssignableFrom(InputType) || float.class.isAssignableFrom(InputType)) {
+                    }
+                    else if (Integer.class.isAssignableFrom(InputType) || int.class.isAssignableFrom(InputType) || Float.class.isAssignableFrom(InputType) || float.class.isAssignableFrom(InputType)) {
                         View ElementValue = LayoutInflater.from(this).inflate(R.layout.number_relementvalue, null);
 
                         TextView fieldName = ElementValue.findViewById(R.id.fieldNameTextView);
@@ -252,6 +257,89 @@ public class RMElementCreationScreen extends AppCompatActivity {
                         }
 
                         enabledCheck.setOnCheckedChangeListener((b, checked) -> fieldInput.setEnabled(checked));
+
+                        InnerScroll.addView(ElementValue);
+                    }
+                    else if (Boolean.class.isAssignableFrom(InputType) || boolean.class.isAssignableFrom(InputType)) {
+                        View ElementValue = LayoutInflater.from(this).inflate(R.layout.dropdown_relementvalue, null);
+
+                        TextView fieldName = ElementValue.findViewById(R.id.fieldNameTextView);
+                        Spinner fieldInput = ElementValue.findViewById(R.id.fieldBox);
+                        ImageButton fieldHelp = ElementValue.findViewById(R.id.helpFieldButton);
+                        CheckBox enabledCheck = ElementValue.findViewById(R.id.enabledCheck);
+
+                        FieldRElementValues.put(field, ElementValue);
+
+                        fieldInput.setAdapter(new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_spinner_dropdown_item, new String[]{"false", "true"}));
+
+                        if (field.isAnnotationPresent(RAnnotation.FieldDetails.class)) {
+                            RAnnotation.FieldDetails fieldDetailsAnno = field.getAnnotation(RAnnotation.FieldDetails.class);
+                            assert fieldDetailsAnno != null;
+                            if (fieldDetailsAnno.displayName() != null)
+                                fieldName.setText(fieldDetailsAnno.displayName());
+                            else
+                                fieldName.setText(field.getName());
+
+
+                            enabledCheck.setClickable(fieldDetailsAnno.Optional());
+                            if (!fieldDetailsAnno.Optional()) {
+                                enabledCheck.setVisibility(TextView.GONE);
+                            }
+                        } else {
+                            fieldName.setText(field.getName());
+                        }
+
+                        if (field.isAnnotationPresent(RAnnotation.HelpMessage.class)) {
+                            RAnnotation.HelpMessage helpMessageAnno = field.getAnnotation(RAnnotation.HelpMessage.class);
+                            fieldHelp.setOnClickListener(v -> {
+                                assert helpMessageAnno != null;
+                                RAlertDialog.showError(getSupportFragmentManager(), helpMessageAnno.value());
+                            });
+                        } else {
+                            fieldHelp.setEnabled(false);
+                        }
+
+                        enabledCheck.setOnCheckedChangeListener((b, checked) -> fieldInput.setEnabled(checked));
+
+                        InnerScroll.addView(ElementValue);
+                    }
+                    else {
+                        //we end up here if a fields type doesn't do anything
+                        View ElementValue = LayoutInflater.from(this.peekAvailableContext()).inflate(R.layout.unsupported_relementvalue, null);
+
+                        TextView fieldName = ElementValue.findViewById(R.id.fieldNameTextView);
+                        ImageButton fieldHelp = ElementValue.findViewById(R.id.helpFieldButton);
+                        CheckBox enabledCheck = ElementValue.findViewById(R.id.enabledCheck);
+
+                        FieldRElementValues.put(field, ElementValue);
+
+                        if (field.isAnnotationPresent(RAnnotation.FieldDetails.class)) {
+                            RAnnotation.FieldDetails fieldDetailsAnno = field.getAnnotation(RAnnotation.FieldDetails.class);
+                            assert fieldDetailsAnno != null;
+                            if (fieldDetailsAnno.displayName() != null)
+                                fieldName.setText(fieldDetailsAnno.displayName());
+                            else
+                                fieldName.setText(field.getName());
+
+
+
+                        } else {
+                            fieldName.setText(field.getName());
+                        }
+
+                        if (field.isAnnotationPresent(RAnnotation.HelpMessage.class)) {
+                            RAnnotation.HelpMessage helpMessageAnno = field.getAnnotation(RAnnotation.HelpMessage.class);
+                            fieldHelp.setOnClickListener(v -> {
+                                RAlertDialog.showError(getSupportFragmentManager(), helpMessageAnno.value());
+                            });
+                        } else {
+                            fieldHelp.setEnabled(false);
+                        }
+
+                        //make the checkbox unchecked so the validations skip this
+                        enabledCheck.setChecked(false);
+                        enabledCheck.setClickable(false);
+                        enabledCheck.setVisibility(TextView.GONE);
 
                         InnerScroll.addView(ElementValue);
                     }

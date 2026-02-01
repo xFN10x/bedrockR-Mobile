@@ -1,6 +1,8 @@
 package fn10.bedrockrmobile.activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Icon;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
 
 import fn10.bedrockr.addons.source.SourceBiomeElement;
 import fn10.bedrockr.addons.source.SourceBlockElement;
@@ -68,7 +71,7 @@ public class RNewElementActivity extends AppCompatActivity {
             TextView elementName = RElement.findViewById(R.id.elementName);
 
             assert details != null;
-            elementIcon.setImageIcon(Icon.createWithData(details.Icon, 0, details.Icon.length));
+            elementIcon.setImageIcon(Icon.createWithBitmap(Bitmap.createScaledBitmap(((BitmapDrawable) Objects.requireNonNull(Icon.createWithData(details.Icon, 0, details.Icon.length).loadDrawable(getBaseContext()))).getBitmap(), 640, 640, false)));
 
             elementDescription.setText(RMFileOperations.parseHTMLBackIntoString(details.Description).replace("\n", " ").replace("  ", " "));
             elementName.setText(details.Name);
