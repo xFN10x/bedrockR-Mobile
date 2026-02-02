@@ -13,12 +13,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.FileProvider;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.ObjectUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +38,7 @@ import fn10.bedrockr.addons.source.interfaces.ElementSource;
 import fn10.bedrockr.interfaces.ElementCreationListener;
 import fn10.bedrockr.utils.RFileOperations;
 import fn10.bedrockrmobile.R;
+import fn10.bedrockrmobile.activity.contracts.PickElementContract;
 import fn10.bedrockrmobile.dialog.RAlertDialog;
 import fn10.bedrockrmobile.dialog.RLoadingDialog;
 import fn10.bedrockrmobile.utils.RMFileOperations;
@@ -44,6 +48,9 @@ public class RWorkspaceViewActivity extends AppCompatActivity implements Element
     public static RWorkspaceViewActivity currentActive;
     private static final String tag = "RWorkspace";
     private SourceWorkspaceFile swf;
+    private final ActivityResultLauncher<ObjectUtils.Null> getSourceElementClass = registerForActivityResult(new PickElementContract(), result -> {
+
+    });
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,10 +77,11 @@ public class RWorkspaceViewActivity extends AppCompatActivity implements Element
         ImageButton newElementButton = findViewById(R.id.addElementButton);
 
         newElementButton.setOnClickListener(v -> {
-            Intent intent1 = new Intent(Intent.ACTION_VIEW);
+            getSourceElementClass.launch(null);
+            /*Intent intent1 = new Intent(Intent.ACTION_VIEW);
             intent1.setAction("bedrockrmobile.intent.NEWELEMENT");
-            intent1.putExtra("wpname",swf.workspaceName());
-            startActivity(intent1);
+            intent1.putExtra("wpname", swf.workspaceName());
+            startActivity(intent1);*/
         });
 
         launchMCButton.setOnClickListener(v -> {
@@ -296,9 +304,9 @@ public class RWorkspaceViewActivity extends AppCompatActivity implements Element
                 throw new RuntimeException(e);
             }
 
-            ImageView elementIcon = (ImageView) RElement.findViewById(R.id.elementIcon);
-            TextView elementDescription = (TextView) RElement.findViewById(R.id.elementDescription);
-            TextView elementName = (TextView) RElement.findViewById(R.id.elementName);
+            ImageView elementIcon = RElement.findViewById(R.id.elementIcon);
+            TextView elementDescription = RElement.findViewById(R.id.elementDescription);
+            TextView elementName = RElement.findViewById(R.id.elementName);
 
             assert details != null;
             elementIcon.setImageIcon(Icon.createWithData(details.Icon, 0, details.Icon.length));
