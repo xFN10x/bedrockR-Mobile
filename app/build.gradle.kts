@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.testing.AbstractTestTask
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -13,8 +15,6 @@ android {
             excludes += "fn10.bedrockr/Launcher.class"
         }
     }
-
-
 
     defaultConfig {
         applicationId = "fn10.bedrockrmobile"
@@ -48,14 +48,15 @@ android {
     buildFeatures {
         compose = true
     }
-    kotlinOptions {
-        jvmTarget = "17"
+    kotlin {
+        jvmToolchain(25)
     }
+
 }
 
-tasks.test {
-    failOnNoDiscoveredTests = false
-}
+/*tasks.withType(AbstractTestTask).configureEach {
+    failOnNoMatchingTests = false
+}*/
 
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
