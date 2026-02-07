@@ -32,7 +32,7 @@
         app:srcCompat="@drawable/brandingfullwshadow" />
 
     <TextView
-        android:id="@+id/loadingText"
+        android:id="@+id/titleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/default_loading"
@@ -58,6 +58,6 @@
         app:layout_constraintBottom_toBottomOf="@+id/bg"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loadingText"
+        app:layout_constraintTop_toBottomOf="@+id/titleText"
         app:layout_constraintVertical_bias="0.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

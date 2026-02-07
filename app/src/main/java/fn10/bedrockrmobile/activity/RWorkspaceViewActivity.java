@@ -49,7 +49,12 @@ public class RWorkspaceViewActivity extends AppCompatActivity implements Element
     private static final String tag = "RWorkspace";
     private SourceWorkspaceFile swf;
     private final ActivityResultLauncher<ObjectUtils.Null> getSourceElementClass = registerForActivityResult(new PickElementContract(), result -> {
-
+        if (result != null) {
+            Intent creationScreenIntent = new Intent();
+            creationScreenIntent.setAction("bedrockrmobile.intent.CREATEELEMENT")
+                    .putExtra("ElementSource", result);
+            startActivity(creationScreenIntent);
+        }
     });
 
     @Override

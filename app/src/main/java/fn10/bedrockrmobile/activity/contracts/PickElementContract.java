@@ -1,5 +1,6 @@
 package fn10.bedrockrmobile.activity.contracts;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
@@ -27,7 +28,9 @@ public class PickElementContract extends ActivityResultContract<ObjectUtils.Null
 
     @Override
     public Class<? extends ElementSource<?>> parseResult(int i, @Nullable Intent intent) {
-        Log.i(tag, ((Class<? extends ElementSource<?>>) intent.getSerializableExtra("class")).getSimpleName());
-        return null;
+        if (i == Activity.RESULT_OK)
+        return ((Class<? extends ElementSource<?>>) intent.getSerializableExtra("class"));
+        else
+            return null;
     }
 }
