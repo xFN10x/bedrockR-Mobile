@@ -59,7 +59,7 @@ android {
 
 
 dependencies {
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
+    coreLibraryDesugaring(libs.desugarjdklibs)
 
     // https://mvnrepository.com/artifact/com.google.guava/guava
     implementation(libs.guava)
@@ -67,7 +67,7 @@ dependencies {
     implementation(libs.commons.lang3)
     implementation(libs.bedrockr)
     // https://mvnrepository.com/artifact/net.lingala.zip4j/zip4j
-    implementation("net.lingala.zip4j:zip4j:2.11.5")
+    implementation(libs.zip4j)
 
     implementation(libs.appcompat)
     implementation(libs.material)

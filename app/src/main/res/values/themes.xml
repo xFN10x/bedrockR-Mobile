@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Theme.BedrockRMobile" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
        <item name="android:fontFamily">@font/font</item>
@@ -6,8 +6,8 @@
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:windowBackground">@color/background</item>
         <item name="android:textColorHint">@color/input_hint_colour</item>
+        <item name="android:textColor">@color/white</item>
     </style>
-
     <style name="Theme.BedrockRMobile.AlertDialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">
         <item name="android:fontFamily">@font/font</item>
         <item name="android:background">@color/background</item>
