@@ -1,4 +1,3 @@
-import org.gradle.api.tasks.testing.AbstractTestTask
 
 plugins {
     alias(libs.plugins.android.application)
@@ -54,9 +53,6 @@ android {
 
 }
 
-/*tasks.withType(AbstractTestTask).configureEach {
-    failOnNoMatchingTests = false
-}*/
 
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
