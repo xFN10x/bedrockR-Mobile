@@ -7,17 +7,16 @@ import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.MultiAutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.content.IntentCompat;
 
@@ -39,6 +38,7 @@ import fn10.bedrockr.addons.source.interfaces.ElementFile;
 import fn10.bedrockr.addons.source.interfaces.ElementSource;
 import fn10.bedrockr.utils.RAnnotation;
 import fn10.bedrockrmobile.R;
+import fn10.bedrockrmobile.activity.components.RArrayAdapter;
 import fn10.bedrockrmobile.dialog.RAlertDialog;
 import fn10.bedrockrmobile.dialog.RHtmlAlert;
 import fn10.bedrockrmobile.elements.RMElementCreationHandler;
@@ -192,7 +192,8 @@ public class RMElementEditingScreen extends AppCompatActivity {
                         } else{
                             //dropdown
                             RAnnotation.StringDropdownField annotation = field.getAnnotation(RAnnotation.StringDropdownField.class);
-                            ArrayAdapter<String> adapter = new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_spinner_dropdown_item, annotation.value());
+                            RArrayAdapter adapter = new RArrayAdapter(getBaseContext(), annotation.value());
+
                             if (annotation.strict()) {
                                 View ElementValue = LayoutInflater.from(this.peekAvailableContext()).inflate(R.layout.dropdown_relementvalue, null);
 
@@ -233,13 +234,20 @@ public class RMElementEditingScreen extends AppCompatActivity {
                                 enabledCheck.setOnCheckedChangeListener((b, checked) -> fieldInput.setEnabled(checked));
                                 InnerScroll.addView(ElementValue);
                             } else {
+                                //not strict
                                 View ElementValue = LayoutInflater.from(this.peekAvailableContext()).inflate(R.layout.notstrict_dropdown_relementvalue, null);
 
                                 TextView fieldName = ElementValue.findViewById(R.id.fieldNameTextView);
-                                MultiAutoCompleteTextView fieldInput = ElementValue.findViewById(R.id.fieldBox);
+                                AppCompatAutoCompleteTextView fieldInput = ElementValue.findViewById(R.id.fieldBox);
                                 ImageButton fieldHelp = ElementValue.findViewById(R.id.helpFieldButton);
                                 CheckBox enabledCheck = ElementValue.findViewById(R.id.enabledCheck);
                                 fieldInput.setAdapter(adapter);
+                                fieldInput.setThreshold(0);
+                                fieldInput.setOnFocusChangeListener((v,h) -> {
+                                    if (h)
+                                        fieldInput.showDropDown();
+                                });
+
 
                                 FieldRElementValues.put(field, ElementValue);
 
@@ -361,7 +369,7 @@ public class RMElementEditingScreen extends AppCompatActivity {
 
                         FieldRElementValues.put(field, ElementValue);
 
-                        fieldInput.setAdapter(new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_spinner_dropdown_item, new String[]{"false", "true"}));
+                        fieldInput.setAdapter(new RArrayAdapter(getBaseContext(), new String[]{"false", "true"}));
 
                         if (field.isAnnotationPresent(RAnnotation.FieldDetails.class)) {
                             RAnnotation.FieldDetails fieldDetailsAnno = field.getAnnotation(RAnnotation.FieldDetails.class);
