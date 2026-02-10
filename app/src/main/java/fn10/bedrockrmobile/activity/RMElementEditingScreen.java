@@ -593,13 +593,18 @@ public class RMElementEditingScreen extends AppCompatActivity {
         return FieldValidReturn.False("This is a bug. This message should never appear");
     }
 
-    public static Object getValueFromRElementView(View view) {
+    public Object getValueFromRElementView(View view) {
         View inputView = view.findViewById(R.id.fieldBox);
-
-        if (inputView instanceof Spinner) {
-            return ((Spinner) inputView).getSelectedItem();
-        } else if (inputView instanceof EditText) {
-            return ((EditText) inputView).getText();
+        for (Map.Entry<Field, View> fieldViewEntry : FieldRElementValues.entrySet()) {
+            if (view.equals(fieldViewEntry.getValue())) {
+                if (fieldViewEntry.getKey().getType().equals(String.class)) {
+                    if (inputView instanceof Spinner) {
+                        return ((Spinner) inputView).getSelectedItem();
+                    } else if (inputView instanceof EditText) {
+                        return ((EditText) inputView).getText().toString();
+                    }
+                }
+            }
         }
         return null;
     }
