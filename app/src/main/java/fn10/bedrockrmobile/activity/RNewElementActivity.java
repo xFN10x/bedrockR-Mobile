@@ -1,5 +1,6 @@
 package fn10.bedrockrmobile.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -79,12 +80,14 @@ public class RNewElementActivity extends AppCompatActivity {
             AppCompatButton elementCreationButton = RElement.findViewById(R.id.editElementButton);
 
             elementCreationButton.setOnClickListener(v -> {
-                RMElementCreationScreen.setCreationListener(RWorkspaceViewActivity.currentActive);
+                setResult(Activity.RESULT_OK,new Intent().putExtra("class", elementClass));
+                finish();
+                /*RMElementCreationScreen.setCreationListener(RWorkspaceViewActivity.currentActive);
 
                 Intent creationScreenIntent = new Intent();
                 creationScreenIntent.setAction("bedrockrmobile.intent.CREATEELEMENT")
                         .putExtra("ElementSource", elementClass);
-                startActivity(creationScreenIntent);
+                startActivity(creationScreenIntent);*/
             });
 
             InnerScroll.addView(RElement);

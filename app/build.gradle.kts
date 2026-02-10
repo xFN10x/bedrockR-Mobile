@@ -1,3 +1,4 @@
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -14,15 +15,12 @@ android {
         }
     }
 
-
-
     defaultConfig {
         applicationId = "fn10.bedrockrmobile"
         minSdk = 28
         targetSdk = 36
         versionCode = 1
         versionName = "Ma1.0 (a2.0)"
-
         multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -48,17 +46,20 @@ android {
     buildFeatures {
         compose = true
     }
-    kotlinOptions {
-        jvmTarget = "17"
+    kotlin {
+        jvmToolchain(25)
+    }
+
+    testOptions {
+        unitTests.all {
+            it.failOnNoDiscoveredTests = false
+        }
     }
 }
 
-tass.test {
-    failOnNoDiscoveredTests = false
-}
 
 dependencies {
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
+    coreLibraryDesugaring(libs.desugarjdklibs)
 
     // https://mvnrepository.com/artifact/com.google.guava/guava
     implementation(libs.guava)
@@ -66,7 +67,7 @@ dependencies {
     implementation(libs.commons.lang3)
     implementation(libs.bedrockr)
     // https://mvnrepository.com/artifact/net.lingala.zip4j/zip4j
-    implementation("net.lingala.zip4j:zip4j:2.11.5")
+    implementation(libs.zip4j)
 
     implementation(libs.appcompat)
     implementation(libs.material)

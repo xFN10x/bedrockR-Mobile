@@ -62,7 +62,7 @@
         </activity>
 
         <activity
-            android:name=".activity.RMElementCreationScreen"
+            android:name=".activity.RMElementEditingScreen"
             android:exported="true">
             <intent-filter>
                 <action android:name="bedrockrmobile.intent.CREATEELEMENT" />

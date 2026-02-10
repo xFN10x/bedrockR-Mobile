@@ -7,20 +7,17 @@ import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.SimpleAdapter;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.IntentCompat;
 
 import java.lang.reflect.Field;
@@ -37,33 +34,33 @@ import java.util.logging.Logger;
 import fn10.bedrockr.addons.source.FieldFilters;
 import fn10.bedrockr.addons.source.SourceItemElement;
 import fn10.bedrockr.addons.source.interfaces.CreationScreenSeperator;
+import fn10.bedrockr.addons.source.interfaces.ElementFile;
 import fn10.bedrockr.addons.source.interfaces.ElementSource;
-import fn10.bedrockr.interfaces.ElementCreationListener;
 import fn10.bedrockr.utils.RAnnotation;
 import fn10.bedrockrmobile.R;
+import fn10.bedrockrmobile.activity.components.RArrayAdapter;
 import fn10.bedrockrmobile.dialog.RAlertDialog;
+import fn10.bedrockrmobile.dialog.RHtmlAlert;
+import fn10.bedrockrmobile.elements.RMElementCreationHandler;
 
-public class RMElementCreationScreen extends AppCompatActivity {
+public class RMElementEditingScreen extends AppCompatActivity {
 
     private static final int AUTOMATIC_MODE = -1;
-    private static ElementCreationListener creationListener = null;
-    private static final String tag = "NewAddonActivity";
+    private static final String tag = "RMElementEditingScreen";
 
+    public final static int CREATED = 0;
+    public final static int DRAFTED = 1;
+    public final static int CANCELED = 2;
     private final List<Field> Fields = new ArrayList<>();
     private final Map<Field, View> FieldRElementValues = new HashMap<>();
-
-    public static void setCreationListener(ElementCreationListener listener) {
-        creationListener = listener;
-    }
-
-    public static ElementCreationListener getCreationListener() {
-        return creationListener;
-    }
 
     private final Map<Class<? extends ElementSource<?>>, Integer> CREATION_SCREEN_LAYOUTS = Map.of(
             //use -1 to make it use automatic mode
             SourceItemElement.class, AUTOMATIC_MODE
     );
+
+    private int screenMode;
+    private RMElementCreationHandler<?> handler;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,12 +73,6 @@ public class RMElementCreationScreen extends AppCompatActivity {
         Intent intent = getIntent();
 
         boolean fromEmpty = true;
-
-        if (creationListener == null) {
-            RAlertDialog.showError(getSupportFragmentManager(), "No creation listener set. Cannot proceed.");
-            finish();
-            return;
-        }
 
         if (!intent.hasExtra("ElementSource")) {
             RAlertDialog.showError(getSupportFragmentManager(), "Didn't get the element source class. (No extra in intent: \"ElementSource\")");
@@ -98,14 +89,33 @@ public class RMElementCreationScreen extends AppCompatActivity {
         } else if (!CREATION_SCREEN_LAYOUTS.containsKey(srcClass)) {
             RAlertDialog.showError(getSupportFragmentManager(), "No creation screen found for class: " + srcClass.getSimpleName() + ". Doing automatic.");
         }
+        this.screenMode = CREATION_SCREEN_LAYOUTS.getOrDefault(srcClass, AUTOMATIC_MODE);
         Log.i(tag, "Showing creation screen with class: " + srcClass.getName());
-        if (CREATION_SCREEN_LAYOUTS.getOrDefault(srcClass, AUTOMATIC_MODE) == AUTOMATIC_MODE) {
+        if (screenMode == AUTOMATIC_MODE) {
             //AUTOMATIC MODE
-            LinearLayout InnerScroll = findViewById(R.id.innerScroll);
-
             ParameterizedType genericInterface = (ParameterizedType) srcClass.getGenericSuperclass();
             assert genericInterface != null;
             Type elementFileClass = genericInterface.getActualTypeArguments()[0];
+            //Add the handler
+            handler = fields -> {
+                try {
+                    if (elementFileClass instanceof Class<?>) {
+                        ElementFile<?> file = ((Class<ElementFile<?>>) elementFileClass).getConstructor().newInstance();
+                        for (Map.Entry<Field, View> entry : fields.entrySet()) {
+                            entry.getKey().set(file, getValueFromRElementView(entry.getValue()));
+                        }
+                        return srcClass.getConstructor((Class<?>) elementFileClass).newInstance((ElementFile<?>) file);
+                    }
+                    return null;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            };
+            //Add the views
+            LinearLayout InnerScroll = findViewById(R.id.innerScroll);
+
+
 
             if (elementFileClass instanceof Class<?>) {
                 // lets see how optimized and clean i can make this
@@ -179,8 +189,97 @@ public class RMElementCreationScreen extends AppCompatActivity {
 
                             enabledCheck.setOnCheckedChangeListener((b, checked) -> fieldInput.setEnabled(checked));
                             InnerScroll.addView(ElementValue);
-                        } else {
+                        } else{
                             //dropdown
+                            RAnnotation.StringDropdownField annotation = field.getAnnotation(RAnnotation.StringDropdownField.class);
+                            RArrayAdapter adapter = new RArrayAdapter(getBaseContext(), annotation.value());
+
+                            if (annotation.strict()) {
+                                View ElementValue = LayoutInflater.from(this.peekAvailableContext()).inflate(R.layout.dropdown_relementvalue, null);
+
+                                TextView fieldName = ElementValue.findViewById(R.id.fieldNameTextView);
+                                Spinner fieldInput = ElementValue.findViewById(R.id.fieldBox);
+                                ImageButton fieldHelp = ElementValue.findViewById(R.id.helpFieldButton);
+                                CheckBox enabledCheck = ElementValue.findViewById(R.id.enabledCheck);
+                                fieldInput.setAdapter(adapter);
+
+                                FieldRElementValues.put(field, ElementValue);
+
+                                if (field.isAnnotationPresent(RAnnotation.FieldDetails.class)) {
+                                    RAnnotation.FieldDetails fieldDetailsAnno = field.getAnnotation(RAnnotation.FieldDetails.class);
+                                    assert fieldDetailsAnno != null;
+                                    if (fieldDetailsAnno.displayName() != null)
+                                        fieldName.setText(fieldDetailsAnno.displayName());
+                                    else
+                                        fieldName.setText(field.getName());
+
+
+                                    enabledCheck.setClickable(fieldDetailsAnno.Optional());
+                                    if (!fieldDetailsAnno.Optional()) {
+                                        enabledCheck.setVisibility(TextView.GONE);
+                                    }
+                                } else {
+                                    fieldName.setText(field.getName());
+                                }
+
+                                if (field.isAnnotationPresent(RAnnotation.HelpMessage.class)) {
+                                    RAnnotation.HelpMessage helpMessageAnno = field.getAnnotation(RAnnotation.HelpMessage.class);
+                                    fieldHelp.setOnClickListener(v -> {
+                                        RAlertDialog.showError(getSupportFragmentManager(), helpMessageAnno.value());
+                                    });
+                                } else {
+                                    fieldHelp.setEnabled(false);
+                                }
+
+                                enabledCheck.setOnCheckedChangeListener((b, checked) -> fieldInput.setEnabled(checked));
+                                InnerScroll.addView(ElementValue);
+                            } else {
+                                //not strict
+                                View ElementValue = LayoutInflater.from(this.peekAvailableContext()).inflate(R.layout.notstrict_dropdown_relementvalue, null);
+
+                                TextView fieldName = ElementValue.findViewById(R.id.fieldNameTextView);
+                                AppCompatAutoCompleteTextView fieldInput = ElementValue.findViewById(R.id.fieldBox);
+                                ImageButton fieldHelp = ElementValue.findViewById(R.id.helpFieldButton);
+                                CheckBox enabledCheck = ElementValue.findViewById(R.id.enabledCheck);
+                                fieldInput.setAdapter(adapter);
+                                fieldInput.setThreshold(0);
+                                fieldInput.setOnFocusChangeListener((v,h) -> {
+                                    if (h)
+                                        fieldInput.showDropDown();
+                                });
+
+
+                                FieldRElementValues.put(field, ElementValue);
+
+                                if (field.isAnnotationPresent(RAnnotation.FieldDetails.class)) {
+                                    RAnnotation.FieldDetails fieldDetailsAnno = field.getAnnotation(RAnnotation.FieldDetails.class);
+                                    assert fieldDetailsAnno != null;
+                                    if (fieldDetailsAnno.displayName() != null)
+                                        fieldName.setText(fieldDetailsAnno.displayName());
+                                    else
+                                        fieldName.setText(field.getName());
+
+
+                                    enabledCheck.setClickable(fieldDetailsAnno.Optional());
+                                    if (!fieldDetailsAnno.Optional()) {
+                                        enabledCheck.setVisibility(TextView.GONE);
+                                    }
+                                } else {
+                                    fieldName.setText(field.getName());
+                                }
+
+                                if (field.isAnnotationPresent(RAnnotation.HelpMessage.class)) {
+                                    RAnnotation.HelpMessage helpMessageAnno = field.getAnnotation(RAnnotation.HelpMessage.class);
+                                    fieldHelp.setOnClickListener(v -> {
+                                        RAlertDialog.showError(getSupportFragmentManager(), helpMessageAnno.value());
+                                    });
+                                } else {
+                                    fieldHelp.setEnabled(false);
+                                }
+
+                                enabledCheck.setOnCheckedChangeListener((b, checked) -> fieldInput.setEnabled(checked));
+                                InnerScroll.addView(ElementValue);
+                            }
                         }
 
 
@@ -270,7 +369,7 @@ public class RMElementCreationScreen extends AppCompatActivity {
 
                         FieldRElementValues.put(field, ElementValue);
 
-                        fieldInput.setAdapter(new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_spinner_dropdown_item, new String[]{"false", "true"}));
+                        fieldInput.setAdapter(new RArrayAdapter(getBaseContext(), new String[]{"false", "true"}));
 
                         if (field.isAnnotationPresent(RAnnotation.FieldDetails.class)) {
                             RAnnotation.FieldDetails fieldDetailsAnno = field.getAnnotation(RAnnotation.FieldDetails.class);
@@ -320,9 +419,6 @@ public class RMElementCreationScreen extends AppCompatActivity {
                                 fieldName.setText(fieldDetailsAnno.displayName());
                             else
                                 fieldName.setText(field.getName());
-
-
-
                         } else {
                             fieldName.setText(field.getName());
                         }
@@ -357,14 +453,14 @@ public class RMElementCreationScreen extends AppCompatActivity {
             AppCompatButton createButton = findViewById(R.id.createButton);
 
             cancelButton.setOnClickListener(v -> {
-                creationListener.onElementCancel();
+                setResult(CANCELED, null);
                 finish();
             });
 
             draftButton.setOnClickListener(v -> {
                 ElementSource<?> es;
                 if ((es = create(true)) != null) {
-                    creationListener.onElementDraft(es);
+                    setResult(DRAFTED, new Intent().putExtra("source", es.getJSONString()));
                     finish();
                 }
             });
@@ -372,15 +468,15 @@ public class RMElementCreationScreen extends AppCompatActivity {
             createButton.setOnClickListener(v -> {
                 ElementSource<?> es;
                 if ((es = create(false)) != null) {
-                    creationListener.onElementCreate(es);
+                    setResult(CREATED, new Intent().putExtra("source", es.getJSONString()));
                     finish();
                 }
             });
         }
     }
 
-    public static class FieldValidReturn implements Comparable<Boolean> {
-        public Boolean valid;
+    public static class FieldValidReturn {
+        public Boolean valid = true;
         public String reason;
 
         public FieldValidReturn(boolean vaild) {
@@ -402,9 +498,12 @@ public class RMElementCreationScreen extends AppCompatActivity {
             return new FieldValidReturn(false, reason);
         }
 
-        @Override
-        public int compareTo(Boolean o) {
-            return valid.compareTo(o);
+        public boolean equals(FieldValidReturn other) {
+            return valid.equals(other.valid);
+        }
+
+        public boolean equals(boolean other) {
+            return valid.equals(other);
         }
     }
 
@@ -478,7 +577,7 @@ public class RMElementCreationScreen extends AppCompatActivity {
                         return FieldValidReturn.False("String is not valid.");
                     } else
                         return FieldValidReturn.True;
-                } else { //its a normal string
+                } else { //its a normal string (or a not strict dropdown)
                     String text = ((EditText) InputView).getText().toString(); // get the text if its not specilized
                     if (InputType.equals(String.class)) { // string
                         log.info(Target + ": String is checking if vaild");
@@ -494,6 +593,17 @@ public class RMElementCreationScreen extends AppCompatActivity {
         return FieldValidReturn.False("This is a bug. This message should never appear");
     }
 
+    public static Object getValueFromRElementView(View view) {
+        View inputView = view.findViewById(R.id.fieldBox);
+
+        if (inputView instanceof Spinner) {
+            return ((Spinner) inputView).getSelectedItem();
+        } else if (inputView instanceof EditText) {
+            return ((EditText) inputView).getText();
+        }
+        return null;
+    }
+
 
     /**
      * Take the fields and turn them into an ElementSource with the contracted ElementFile.
@@ -502,9 +612,23 @@ public class RMElementCreationScreen extends AppCompatActivity {
      * @return the created ElementSource, or null if it fails.
      */
     public ElementSource<?> create(boolean draft) {
+        Map<Field, String> incorrectFields = new HashMap<>();
         for (Field field : Fields) {
-            isFieldValid(field, !draft);
+            FieldValidReturn fieldValid = isFieldValid(field, !draft);
+            if (fieldValid.equals(false)) {
+                incorrectFields.put(field, fieldValid.reason);
+            }
         }
-        return null;
+        if (!incorrectFields.isEmpty()) {
+            StringBuilder messageBuilder = new StringBuilder("<html><i>Some fields were incorrect,</i><br /><ul>");
+            for (Map.Entry<Field, String> entry : incorrectFields.entrySet()) {
+                messageBuilder.append("<li><b>"+ entry.getKey().getName() +":</b> "+ entry.getValue() +" </li>");
+            }
+            messageBuilder.append("</ul></html>");
+            RHtmlAlert.show(getSupportFragmentManager(),"Couldn't Build",messageBuilder.toString());
+            return null;
+        }
+
+        return handler.createElement(FieldRElementValues);
     }
 }
