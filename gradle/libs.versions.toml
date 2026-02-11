@@ -18,7 +18,7 @@ composeBom = "2024.09.00"
 coreKtx = "1.17.0"
 coordinatorlayout = "1.3.0"
 constraintlayout = "2.2.1"
-zip4j = "2.11.5"
+zip4j = "2.11.6"
 
 [libraries]
 bedrockr = { module = "com.github.xFN10x:bedrockR", version.ref = "githubBedrockr" }
