@@ -47,4 +47,5 @@
     <string name="create_text">Create</string>
     <string name="failed_launch">Couldn\'t launch Minecraft, is it installed?</string>
     <string name="unsupported_value_text">Not Supported</string>
+    <string name="workspace_unsupported">Workspace not supported for this version of bedrockR.</string>
 </resources>

@@ -31,11 +31,11 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-import fn10.bedrockr.addons.source.FieldFilters;
-import fn10.bedrockr.addons.source.SourceItemElement;
-import fn10.bedrockr.addons.source.interfaces.CreationScreenSeperator;
-import fn10.bedrockr.addons.source.interfaces.ElementFile;
-import fn10.bedrockr.addons.source.interfaces.ElementSource;
+import fn10.bedrockr.addons.element.FieldFilters;
+import fn10.bedrockr.addons.element.elementSources.SourceItemElement;
+import fn10.bedrockr.addons.element.interfaces.CreationScreenSeparator;
+import fn10.bedrockr.addons.element.interfaces.ElementFile;
+import fn10.bedrockr.addons.element.interfaces.ElementSource;
 import fn10.bedrockr.utils.RAnnotation;
 import fn10.bedrockrmobile.R;
 import fn10.bedrockrmobile.activity.components.RArrayAdapter;
@@ -104,7 +104,7 @@ public class RMElementEditingScreen extends AppCompatActivity {
                         for (Map.Entry<Field, View> entry : fields.entrySet()) {
                             entry.getKey().set(file, getValueFromRElementView(entry.getValue()));
                         }
-                        return srcClass.getConstructor((Class<?>) elementFileClass).newInstance((ElementFile<?>) file);
+                        return file.getNewSource();
                     }
                     return null;
                 } catch (Exception e) {
@@ -135,7 +135,7 @@ public class RMElementEditingScreen extends AppCompatActivity {
                 for (Field field : fields) {
                     Log.i(tag, field.getName());
 
-                    if (field.getType().equals(CreationScreenSeperator.class)) {
+                    if (field.getType().equals(CreationScreenSeparator.class)) {
                         LayoutInflater.from(this).inflate(R.layout.rcreationscreen_div, InnerScroll);
                         continue;
                     }

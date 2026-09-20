@@ -1,9 +1,13 @@
 package fn10.bedrockrmobile;
 
+import static androidx.activity.result.ActivityResultCallerKt.registerForActivityResult;
+
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,9 +24,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.MessageFormat;
 
-import fn10.bedrockr.addons.source.elementFiles.WorkspaceFile;
+import fn10.bedrockr.addons.element.elementFiles.WorkspaceFile;
 import fn10.bedrockr.utils.Greetings;
 import fn10.bedrockr.utils.RFileOperations;
 import fn10.bedrockr.utils.SettingsFile;
@@ -46,7 +51,7 @@ public class Launcher extends AppCompatActivity {
         Log.i(tag, "Public Folder: " + RMFileOperations.BEDROCKR_PUBLIC_PATH.toAbsolutePath());
         RFileOperations.setBaseDir(getFilesDir());
         SettingsFile settings = SettingsFile.load();
-        RFileOperations.setComMojangDir(new File(settings.comMojangPath));
+        RFileOperations.setComMojangDir(settings.comMojangPath);
         Log.i(tag, "Internal Folder: " + RFileOperations.getBaseDirectory().getAbsolutePath());
     }
 
@@ -60,18 +65,15 @@ public class Launcher extends AppCompatActivity {
 
         Greetings.Greeting greeting = CompatGreetings.GetGreeting();
 
-        greetingText.setText(greeting.Text);
-        greetingText.setTextSize(greeting.Size);
+        greetingText.setText(greeting.Text());
+        greetingText.setTextSize(greeting.Size());
 
         ImageButton newAddonButton = findViewById(R.id.newAddonButton);
 
-        newAddonButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setAction("bedrockrmobile.intent.CREATE");
-                activityLauncher.launch(intent);
-            }
+        newAddonButton.setOnClickListener(v -> {
+            Intent intent = new Intent();
+            intent.setAction("bedrockrmobile.intent.CREATE");
+            activityLauncher.launch(intent);
         });
 
         reloadWorkspaces();
@@ -81,25 +83,29 @@ public class Launcher extends AppCompatActivity {
         Log.i(tag, "Reloading workspaces...");
         RAddonInnerScroll.removeAllViews();
         for (String wpName : RFileOperations.getWorkspaces()) {
-            Log.i(tag, "Found workspace: " + wpName);
-            WorkspaceFile wpF = RFileOperations.getWorkspaceFile(wpName);
+            try {
+                Log.i(tag, "Found workspace: " + wpName);
+                WorkspaceFile wpF = RFileOperations.getWorkspaceFile(wpName);
 
-            ConstraintLayout RAddon = (ConstraintLayout) LayoutInflater.from(this).inflate(R.layout.raddon, null);
+                ConstraintLayout RAddon = (ConstraintLayout) LayoutInflater.from(this).inflate(R.layout.raddon, null);
 
-            ImageView addonBG = RAddon.findViewById(R.id.addonBackground);
-            TextView addonName = RAddon.findViewById(R.id.addonName);
-            Button loadAddonButton = RAddon.findViewById(R.id.loadAddonButton);
+                ImageView addonBG = RAddon.findViewById(R.id.addonBackground);
+                TextView addonName = RAddon.findViewById(R.id.addonName);
+                Button loadAddonButton = RAddon.findViewById(R.id.loadAddonButton);
 
-            loadAddonButton.setOnClickListener(v -> {
-                Intent intent = new Intent();
-                intent.setAction("bedrockrmobile.intent.WORKSPACE");
-                intent.putExtra(RMFileOperations.OPEN_WORKSPACE_EXTRA_NAME, wpName);
-                startActivity(intent);
-            });
-            addonName.setText(wpName, TextView.BufferType.NORMAL);
-            addonBG.setImageIcon(Icon.createWithContentUri(Uri.fromFile(RFileOperations.getFileFromWorkspace(wpName, "icon." + wpF.IconExtension))));
+                loadAddonButton.setOnClickListener(v -> {
+                    Intent intent = new Intent();
+                    intent.setAction("bedrockrmobile.intent.WORKSPACE");
+                    intent.putExtra(RMFileOperations.OPEN_WORKSPACE_EXTRA_NAME, wpName);
+                    startActivity(intent);
+                });
+                addonName.setText(wpName, TextView.BufferType.NORMAL);
+                addonBG.setImageIcon(Icon.createWithContentUri(Uri.fromFile(RFileOperations.getFileFromWorkspace(wpName, "icon." + wpF.IconExtension))));
 
-            RAddonInnerScroll.addView(RAddon);
+                RAddonInnerScroll.addView(RAddon);
+            } catch (IOException e) {
+                Log.e(tag,"Failed to load workspace: " + wpName, e);
+            }
         }
     }
 }

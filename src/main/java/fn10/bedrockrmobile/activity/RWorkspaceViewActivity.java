@@ -1,12 +1,12 @@
 package fn10.bedrockrmobile.activity;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.drawable.Icon;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -14,7 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -26,16 +25,17 @@ import org.apache.commons.lang3.ObjectUtils;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-import fn10.bedrockr.addons.source.SourceWorkspaceFile;
-import fn10.bedrockr.addons.source.elementFiles.GlobalBuildingVariables;
-import fn10.bedrockr.addons.source.interfaces.ElementDetails;
-import fn10.bedrockr.addons.source.interfaces.ElementFile;
-import fn10.bedrockr.addons.source.interfaces.ElementSource;
-import fn10.bedrockr.interfaces.ElementCreationListener;
+import fn10.bedrockr.addons.element.ElementCreationListener;
+import fn10.bedrockr.addons.element.elementFiles.ResourcePackBuilder;
+import fn10.bedrockr.addons.element.elementFiles.WorkspaceFile;
+import fn10.bedrockr.addons.element.elementSources.SourceWorkspaceFile;
+import fn10.bedrockr.addons.element.interfaces.ElementDetails;
+import fn10.bedrockr.addons.element.interfaces.ElementFile;
+import fn10.bedrockr.addons.element.interfaces.ElementSource;
+import fn10.bedrockr.addons.resource.WorkspaceResources;
 import fn10.bedrockr.utils.RFileOperations;
 import fn10.bedrockrmobile.R;
 import fn10.bedrockrmobile.activity.contracts.PickElementContract;
@@ -47,7 +47,7 @@ public class RWorkspaceViewActivity extends AppCompatActivity implements Element
 
     public static RWorkspaceViewActivity currentActive;
     private static final String tag = "RWorkspace";
-    private SourceWorkspaceFile swf;
+    private SourceWorkspaceFile swpf;
     private final ActivityResultLauncher<ObjectUtils.Null> getSourceElementClass = registerForActivityResult(new PickElementContract(), result -> {
         if (result != null) {
             Intent creationScreenIntent = new Intent();
@@ -66,10 +66,10 @@ public class RWorkspaceViewActivity extends AppCompatActivity implements Element
         setContentView(R.layout.rworkspace);
 
         Intent intent = getIntent();
-        File workspaceDiscFile = RFileOperations.getFileFromWorkspace(intent.getStringExtra(RMFileOperations.OPEN_WORKSPACE_EXTRA_NAME), RFileOperations.WPFFILENAME);
         SourceWorkspaceFile SWPF;
         try {
-            SWPF = new SourceWorkspaceFile(new String(Files.readAllBytes(workspaceDiscFile.toPath())));
+        WorkspaceFile workspaceDiscFile = RFileOperations.getWorkspaceFile(intent.getStringExtra(RMFileOperations.OPEN_WORKSPACE_EXTRA_NAME));
+            SWPF = workspaceDiscFile.getNewSource();
         } catch (IOException e) {
             RAlertDialog.showError(getResources(), getSupportFragmentManager(), R.string.workspace_failed);
             return;
@@ -101,7 +101,7 @@ public class RWorkspaceViewActivity extends AppCompatActivity implements Element
 
         updateAddonAndPlayButton.setOnClickListener(v -> {
             try {
-                String stringVersion = swf.getSerilized().BPVersion;
+                String stringVersion = swpf.getSerialized().BPVersion;
                 List<Long> longList = new ArrayList<Long>();
                 // turn the string version (1.0.0) into array...
                 // which it should have been in the first place. ([1,0,0])
@@ -113,13 +113,13 @@ public class RWorkspaceViewActivity extends AppCompatActivity implements Element
 
                 String currentStringVersion = "1.0." + currentBuildVersion;
 
-                swf.getSerilized().BPVersion = currentStringVersion;
-                swf.getSerilized().RPVersion = currentStringVersion;
+                swpf.getSerialized().BPVersion = currentStringVersion;
+                swpf.getSerialized().RPVersion = currentStringVersion;
 
-                swf.getSerilized().RPSuffix = " RP (v" + currentBuildVersion + ")";
-                swf.getSerilized().BPSuffix = " BP (v" + currentBuildVersion + ")";
+                swpf.getSerialized().RPSuffix = " RP (v" + currentBuildVersion + ")";
+                swpf.getSerialized().BPSuffix = " BP (v" + currentBuildVersion + ")";
 
-                swf.saveJSONFile(swf.workspaceName());
+                swpf.saveJSONFile(swpf.workspaceName());
 
                 buildElements(false, () -> {
                     try {
@@ -127,7 +127,7 @@ public class RWorkspaceViewActivity extends AppCompatActivity implements Element
                         minecraftImportIntent.setData(FileProvider.getUriForFile(
                                 this,
                                 getPackageName() + ".provider",
-                                RMFileOperations.getMCAddonOfWorkspace(swf.workspaceName()).toFile()));
+                                RMFileOperations.getMCAddonOfWorkspace(swpf.workspaceName()).toFile()));
                         minecraftImportIntent.setPackage("com.mojang.minecraftpe");
                         minecraftImportIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         startActivity(minecraftImportIntent);
@@ -137,7 +137,7 @@ public class RWorkspaceViewActivity extends AppCompatActivity implements Element
                 });
 
 
-            } catch (IOException e) {
+            } catch (IOException | WorkspaceResources.WorkspaceUnsupportedException e) {
                 throw new RuntimeException(e);
             }
         });
@@ -150,7 +150,7 @@ public class RWorkspaceViewActivity extends AppCompatActivity implements Element
                     Toast finishedToast = Toast.makeText(this, R.string.build_success, Toast.LENGTH_SHORT);
                     finishedToast.show();
                 });
-            } catch (IOException e) {
+            } catch (IOException | WorkspaceResources.WorkspaceUnsupportedException e) {
                 RAlertDialog.showError(getSupportFragmentManager(), e);
             }
 
@@ -163,13 +163,18 @@ public class RWorkspaceViewActivity extends AppCompatActivity implements Element
                     Toast finishedToast = Toast.makeText(this, R.string.build_success, Toast.LENGTH_SHORT);
                     finishedToast.show();
                 });
-            } catch (IOException e) {
+            } catch (IOException | WorkspaceResources.WorkspaceUnsupportedException e) {
                 RAlertDialog.showError(getSupportFragmentManager(), e);
             }
         });
 
-        RFileOperations.setCurrentWorkspace(SWPF);
-        swf = SWPF;
+        try {
+            RFileOperations.loadWorkspace(SWPF);
+        } catch (WorkspaceResources.WorkspaceUnsupportedException e) {
+            RAlertDialog.showError(getResources(), getSupportFragmentManager(), R.string.workspace_unsupported);
+            return;
+        }
+        swpf = SWPF;
 
         refreshElements();
     }
@@ -250,18 +255,19 @@ public class RWorkspaceViewActivity extends AppCompatActivity implements Element
      * @param rebuild Specifies if the build folders should be deleted before the workspace is made
      * @throws IOException If deleting the build folders fails
      */
-    public void buildElements(boolean rebuild, Runnable whenDone) throws IOException {
+    public void buildElements(boolean rebuild, Runnable whenDone) throws IOException, WorkspaceResources.WorkspaceUnsupportedException {
         RLoadingDialog dialog = new RLoadingDialog();
         runOnUiThread(() -> dialog.show(getSupportFragmentManager(), "R_LOADING_SCREEN"));
+        WorkspaceResources res = WorkspaceResources.load(swpf.workspaceName());
 
         new Thread(() -> {
             try {
                 if (rebuild)
-                    Log.i(tag, "Rebuilding workspace: " + swf.workspaceName());
+                    Log.i(tag, "Rebuilding workspace: " + swpf.workspaceName());
                 else
-                    Log.i(tag, "Building workspace: " + swf.workspaceName());
-                String BPdir = RFileOperations.getBaseDirectory("build", "BP", swf.workspaceName()).toString();
-                String RPdir = RFileOperations.getBaseDirectory("build", "RP", swf.workspaceName()).toString();
+                    Log.i(tag, "Building workspace: " + swpf.workspaceName());
+                String BPdir = RFileOperations.getBaseDirectory("build", "BP", swpf.workspaceName()).toString();
+                String RPdir = RFileOperations.getBaseDirectory("build", "RP", swpf.workspaceName()).toString();
 
                 if (rebuild) {
                     try {
@@ -272,21 +278,21 @@ public class RWorkspaceViewActivity extends AppCompatActivity implements Element
                     }
                 }
 
-                GlobalBuildingVariables gbv = new GlobalBuildingVariables(swf.getSerilized(), RFileOperations.getResources(swf.workspaceName()).getSerilized());
-                List<ElementFile<?>> toBuild = List.of(RFileOperations.getElementsFromWorkspace(swf.workspaceName()));
+                ResourcePackBuilder gbv = new ResourcePackBuilder(swpf.getSerialized());
+                List<ElementFile<?>> toBuild = List.of(RFileOperations.getElementsFromWorkspace(swpf.workspaceName()));
 
                 //build all elements
                 for (ElementFile<?> element : toBuild) {
-                    element.build(BPdir, swf.getSerilized(), RPdir, gbv);
+                    element.build(BPdir, swpf.getSerialized(), RPdir, gbv, res);
                 }
 
                 //build resources
-                gbv.build(BPdir, swf.getSerilized(), RPdir, gbv);
+                gbv.build(BPdir, swpf.getSerialized(), RPdir, gbv,res);
                 //build workspace
-                swf.getSerilized().build(BPdir, swf.getSerilized(), RPdir, gbv);
+                swpf.getSerialized().build(BPdir, swpf.getSerialized(), RPdir, gbv,res);
 
                 //build mcpack
-                RMFileOperations.buildMCAddon(swf.workspaceName());
+                RMFileOperations.buildMCAddon(swpf.workspaceName());
 
                 whenDone.run();
                 runOnUiThread(dialog::dismiss);
@@ -298,7 +304,7 @@ public class RWorkspaceViewActivity extends AppCompatActivity implements Element
 
     public void refreshElements() {
         LinearLayout InnerScroll = findViewById(R.id.ElementInnerScroll);
-        for (ElementFile<?> file : RFileOperations.getElementsFromWorkspace(swf.workspaceName())) {
+        for (ElementFile<?> file : RFileOperations.getElementsFromWorkspace(swpf.workspaceName())) {
             ConstraintLayout RElement = (ConstraintLayout) LayoutInflater.from(this).inflate(R.layout.rworkspaceelement, null);
             Class<? extends ElementSource<?>> sourceElementClass = file.getSourceClass();
 
@@ -314,7 +320,9 @@ public class RWorkspaceViewActivity extends AppCompatActivity implements Element
             TextView elementName = RElement.findViewById(R.id.elementName);
 
             assert details != null;
-            elementIcon.setImageIcon(Icon.createWithData(details.Icon, 0, details.Icon.length));
+            Resources res = getApplicationContext().getResources();
+            int iconId = res.getIdentifier("element_" + details.Icon.toLowerCase(), "drawable", null);
+            elementIcon.setImageIcon(Icon.createWithResource(getApplicationContext(), iconId));
 
             elementDescription.setText(RMFileOperations.parseHTMLBackIntoString(details.Description).replace("\n", " ").replace("  ", " "));
             elementName.setText(file.getElementName());
@@ -325,21 +333,31 @@ public class RWorkspaceViewActivity extends AppCompatActivity implements Element
     }
 
     @Override
-    public void onElementCreate(ElementSource<?> element) {
-        element.getSerilized().setDraft(false);
-
+    public <T extends ElementFile<? extends ElementSource<T>>> void onElementDraft(ElementSource<T> element) {
+        try {
+            element.saveJSONFile(swpf.getSerialized().WorkspaceName);
+        } catch (IOException e) {
+        }
         refreshElements();
     }
 
     @Override
-    public void onElementDraft(ElementSource<?> element) {
-        element.getSerilized().setDraft(true);
+    public <T extends ElementFile<? extends ElementSource<T>>> void onElementCreate(ElementSource<T> element) {
+        try {
+            element.saveJSONFile(swpf.workspaceName());
 
-        refreshElements();
+            refreshElements();
+        } catch (IOException e) {
+        }
     }
 
     @Override
     public void onElementCancel() {
         refreshElements();
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+        super.onPointerCaptureChanged(hasCapture);
     }
 }

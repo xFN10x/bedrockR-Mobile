@@ -28,8 +28,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Objects;
 
-import fn10.bedrockr.addons.source.FieldFilters;
-import fn10.bedrockr.addons.source.elementFiles.WorkspaceFile;
+import fn10.bedrockr.addons.element.FieldFilters;
+import fn10.bedrockr.addons.element.elementFiles.WorkspaceFile;
 import fn10.bedrockr.utils.RFileOperations;
 import fn10.bedrockrmobile.Launcher;
 import fn10.bedrockrmobile.R;
