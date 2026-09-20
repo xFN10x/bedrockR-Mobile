@@ -152,7 +152,7 @@ public class RMElementEditingScreen extends AppCompatActivity {
                         //if its a string
                         if (!field.isAnnotationPresent(RAnnotation.StringDropdownField.class)) {
                             //normal
-                            View ElementValue = LayoutInflater.from(this.peekAvailableContext()).inflate(R.layout.string_relementvalue, null);
+                            View ElementValue = LayoutInflater.from(this.peekAvailableContext()).inflate(R.layout.rev_string, null);
 
                             TextView fieldName = ElementValue.findViewById(R.id.fieldNameTextView);
                             EditText fieldInput = ElementValue.findViewById(R.id.fieldBox);
@@ -195,7 +195,7 @@ public class RMElementEditingScreen extends AppCompatActivity {
                             RArrayAdapter adapter = new RArrayAdapter(getBaseContext(), annotation.value());
 
                             if (annotation.strict()) {
-                                View ElementValue = LayoutInflater.from(this.peekAvailableContext()).inflate(R.layout.dropdown_relementvalue, null);
+                                View ElementValue = LayoutInflater.from(this.peekAvailableContext()).inflate(R.layout.rev_dropdown, null);
 
                                 TextView fieldName = ElementValue.findViewById(R.id.fieldNameTextView);
                                 Spinner fieldInput = ElementValue.findViewById(R.id.fieldBox);
@@ -235,7 +235,7 @@ public class RMElementEditingScreen extends AppCompatActivity {
                                 InnerScroll.addView(ElementValue);
                             } else {
                                 //not strict
-                                View ElementValue = LayoutInflater.from(this.peekAvailableContext()).inflate(R.layout.notstrict_dropdown_relementvalue, null);
+                                View ElementValue = LayoutInflater.from(this.peekAvailableContext()).inflate(R.layout.rev_notstrict_dropdown, null);
 
                                 TextView fieldName = ElementValue.findViewById(R.id.fieldNameTextView);
                                 AppCompatAutoCompleteTextView fieldInput = ElementValue.findViewById(R.id.fieldBox);
@@ -285,7 +285,7 @@ public class RMElementEditingScreen extends AppCompatActivity {
 
                     }
                     else if (Integer.class.isAssignableFrom(InputType) || int.class.isAssignableFrom(InputType) || Float.class.isAssignableFrom(InputType) || float.class.isAssignableFrom(InputType)) {
-                        View ElementValue = LayoutInflater.from(this).inflate(R.layout.number_relementvalue, null);
+                        View ElementValue = LayoutInflater.from(this).inflate(R.layout.rev_number, null);
 
                         TextView fieldName = ElementValue.findViewById(R.id.fieldNameTextView);
                         EditText fieldInput = ElementValue.findViewById(R.id.fieldBox);
@@ -360,7 +360,7 @@ public class RMElementEditingScreen extends AppCompatActivity {
                         InnerScroll.addView(ElementValue);
                     }
                     else if (Boolean.class.isAssignableFrom(InputType) || boolean.class.isAssignableFrom(InputType)) {
-                        View ElementValue = LayoutInflater.from(this).inflate(R.layout.dropdown_relementvalue, null);
+                        View ElementValue = LayoutInflater.from(this).inflate(R.layout.rev_dropdown, null);
 
                         TextView fieldName = ElementValue.findViewById(R.id.fieldNameTextView);
                         Spinner fieldInput = ElementValue.findViewById(R.id.fieldBox);
@@ -404,7 +404,7 @@ public class RMElementEditingScreen extends AppCompatActivity {
                     }
                     else {
                         //we end up here if a fields type doesn't do anything
-                        View ElementValue = LayoutInflater.from(this.peekAvailableContext()).inflate(R.layout.unsupported_relementvalue, null);
+                        View ElementValue = LayoutInflater.from(this.peekAvailableContext()).inflate(R.layout.rev_unsupported, null);
 
                         TextView fieldName = ElementValue.findViewById(R.id.fieldNameTextView);
                         ImageButton fieldHelp = ElementValue.findViewById(R.id.helpFieldButton);
