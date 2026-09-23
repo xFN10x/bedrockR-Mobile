@@ -51,9 +51,7 @@ public class RMElementEditingScreen extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().hide();
-        }
+        
         setContentView(R.layout.relementcreationscreen);
 
         Intent intent = getIntent();

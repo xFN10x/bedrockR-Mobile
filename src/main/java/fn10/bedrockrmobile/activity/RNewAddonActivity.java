@@ -44,9 +44,7 @@ public class RNewAddonActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().hide();
-        }
+        
         setContentView(R.layout.rnewaddon);
         Button selectIconButton = findViewById(R.id.selectIconButton);
         iconView = findViewById(R.id.addonIcon);

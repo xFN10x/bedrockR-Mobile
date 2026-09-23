@@ -60,9 +60,7 @@ public class RWorkspaceViewActivity extends AppCompatActivity implements Element
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().hide();
-        }
+        
         setContentView(R.layout.rworkspace);
 
         Intent intent = getIntent();
