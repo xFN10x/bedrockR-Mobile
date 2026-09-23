@@ -7,6 +7,7 @@
         <item name="android:windowBackground">@color/background</item>
         <item name="android:textColorHint">@color/input_hint_colour</item>
         <item name="android:textColor">@color/white</item>
+        <item name="android:scrollbarThumbVertical">@color/accentColor</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
     </style>

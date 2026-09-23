@@ -28,7 +28,7 @@
 
     <ImageView
         android:id="@+id/addonIcon"
-        android:layout_width="401dp"
+        android:layout_width="250dp"
         android:layout_height="0dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
@@ -45,19 +45,22 @@
         android:id="@+id/selectIconButton"
         android:layout_width="300dp"
         android:layout_height="0dp"
-        android:layout_marginEnd="8dp"
         android:background="@drawable/button"
         android:minHeight="48dp"
         android:text="@string/select_icon"
         android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="@+id/createAddonButton"
-        app:layout_constraintEnd_toStartOf="@+id/createAddonButton"
+        app:layout_constraintEnd_toEndOf="@+id/addonIcon"
+        app:layout_constraintStart_toStartOf="@+id/addonIcon"
         app:layout_constraintTop_toTopOf="@+id/createAddonButton" />
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="0dp"
         android:layout_height="238dp"
         android:layout_marginStart="32dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/createAddonButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/addonIcon"
@@ -72,7 +75,7 @@
 
             <EditText
                 android:id="@+id/addonNameBox"
-                android:layout_width="400dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
@@ -89,7 +92,7 @@
 
             <EditText
                 android:id="@+id/addonPrefixBox"
-                android:layout_width="400dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
@@ -107,8 +110,11 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/minimumEngineVersionFull"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="90dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
                 app:layout_constraintEnd_toEndOf="@+id/addonDescriptionBox"
                 app:layout_constraintStart_toStartOf="@+id/addonDescriptionBox"
                 app:layout_constraintTop_toBottomOf="@+id/addonPrefixBox">
@@ -128,20 +134,21 @@
                 <Spinner
                     android:id="@+id/minimumEngineVersionSpinner"
                     android:layout_width="0dp"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:background="@drawable/button"
                     android:entries="@array/minimum_version"
                     android:padding="15dp"
                     android:spinnerMode="dropdown"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/minimumEngineVersionText" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <EditText
                 android:id="@+id/addonDescriptionBox"
-                android:layout_width="400dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
@@ -158,6 +165,7 @@
                 android:textCursorDrawable="@color/white" />
         </LinearLayout>
     </ScrollView>
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/createAddonButton"
         android:layout_width="300dp"

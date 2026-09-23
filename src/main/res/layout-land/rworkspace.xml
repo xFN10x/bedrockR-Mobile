@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/background"
+    android:theme="@style/Theme.BedrockRMobile"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ScrollView
+        android:id="@+id/ElementScroll"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/addon_selector"
+        android:contentDescription="@string/element_scroll_description"
+        android:padding="5dp"
+        android:theme="@style/Theme.BedrockRMobile"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/addResourceButton"
+        app:layout_constraintTop_toTopOf="@+id/addElementButton">
+
+        <LinearLayout
+            android:id="@+id/ElementInnerScroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:theme="@style/Theme.BedrockRMobile">
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/Toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/accentColor"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/Theme.BedrockRMobile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/buildElementsButton"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/button"
+        android:contentDescription="@string/build_elements"
+        android:scaleType="fitXY"
+        app:layout_constraintEnd_toStartOf="@+id/launchMCButton"
+        app:layout_constraintTop_toBottomOf="@+id/Toolbar"
+        app:srcCompat="@drawable/build" />
+
+    <ImageButton
+        android:id="@+id/launchMCAndBuild"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/button"
+        android:contentDescription="@string/launch_minecraft_and_update_the_addon_description"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Toolbar"
+        app:srcCompat="@drawable/launchmcwimport" />
+
+    <ImageButton
+        android:id="@+id/launchMCButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/button"
+        android:contentDescription="@string/launch_minecraft_description"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toStartOf="@+id/launchMCAndBuild"
+        app:layout_constraintTop_toBottomOf="@+id/Toolbar"
+        app:srcCompat="@drawable/launchmc" />
+
+    <ImageButton
+        android:id="@+id/helpButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/button"
+        android:contentDescription="@string/open_wiki_description"
+        android:scaleType="fitXY"
+        android:visibility="visible"
+        app:layout_constraintEnd_toStartOf="@+id/reBuildButton"
+        app:layout_constraintTop_toBottomOf="@+id/Toolbar"
+        app:srcCompat="@drawable/help" />
+
+    <ImageButton
+        android:id="@+id/addResourceButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/button"
+        android:contentDescription="@string/add_resource_description"
+        android:scaleType="fitXY"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addElementButton"
+        app:srcCompat="@drawable/newresource" />
+
+    <ImageButton
+        android:id="@+id/reBuildButton"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/button"
+        android:contentDescription="@string/re_build_workspace_description"
+        android:scaleType="fitXY"
+        app:layout_constraintEnd_toStartOf="@+id/buildElementsButton"
+        app:layout_constraintTop_toBottomOf="@+id/Toolbar"
+        app:srcCompat="@drawable/rebuild" />
+
+    <ImageButton
+        android:id="@+id/addElementButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/button"
+        android:contentDescription="@string/add_element_description"
+        android:scaleType="fitXY"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/launchMCAndBuild"
+        app:srcCompat="@drawable/newelement" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
