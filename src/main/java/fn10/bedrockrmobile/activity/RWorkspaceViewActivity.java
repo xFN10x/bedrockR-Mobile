@@ -322,7 +322,7 @@ public class RWorkspaceViewActivity extends AppCompatActivity implements Element
             assert details != null;
             Resources res = getApplicationContext().getResources();
             int iconId = res.getIdentifier("element_" + details.Icon.toLowerCase(), "drawable", null);
-            elementIcon.setImageIcon(Icon.createWithResource(getApplicationContext(), iconId));
+            elementIcon. setImageIcon(Icon.createWithResource(getApplicationContext(), iconId));
 
             elementDescription.setText(RMFileOperations.parseHTMLBackIntoString(details.Description).replace("\n", " ").replace("  ", " "));
             elementName.setText(file.getElementName());

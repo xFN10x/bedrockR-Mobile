@@ -9,10 +9,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 
 import fn10.bedrockr.addons.element.interfaces.ElementSource;
 
-public class PickElementContract extends ActivityResultContract<ObjectUtils.Null, Class<? extends ElementSource<?>>> {
+public class PickElementContract extends ActivityResultContract<ObjectUtils.Null, Pair<Class<? extends ElementSource<?>>, String>> {
     private final static String tag = "PickElementContract";
 
     @NonNull
@@ -24,9 +26,9 @@ public class PickElementContract extends ActivityResultContract<ObjectUtils.Null
     }
 
     @Override
-    public Class<? extends ElementSource<?>> parseResult(int i, @Nullable Intent intent) {
+    public Pair<Class<? extends ElementSource<?>>, String> parseResult(int i, @Nullable Intent intent) {
         if (i == Activity.RESULT_OK)
-        return ((Class<? extends ElementSource<?>>) intent.getSerializableExtra("class"));
+            return Pair.of(((Class<? extends ElementSource<?>>) intent.getSerializableExtra("class")), intent.getStringExtra("json"));
         else
             return null;
     }

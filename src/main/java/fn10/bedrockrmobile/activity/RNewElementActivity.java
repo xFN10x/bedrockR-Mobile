@@ -2,6 +2,7 @@ package fn10.bedrockrmobile.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Icon;
@@ -34,15 +35,6 @@ import fn10.bedrockrmobile.R;
 import fn10.bedrockrmobile.utils.RMFileOperations;
 
 public class RNewElementActivity extends AppCompatActivity {
-
-    public static final Class<? extends ElementSource<?>>[] ELEMENTS = new Class[]{
-            SourceItemElement.class,
-            SourceBlockElement.class,
-            SourceScriptElement.class,
-            SourceRecipeElement.class,
-            SourceFoodElement.class,
-            SourceBiomeElement.class,
-    };
     private static final String tag = "NewAddonActivity";
 
     @Override
@@ -58,13 +50,13 @@ public class RNewElementActivity extends AppCompatActivity {
         LinearLayout InnerScroll = findViewById(R.id.innerScroll);
 
         backButton.setOnClickListener(v -> finish());
-
-        for (Class<? extends ElementSource<?>> elementClass : ELEMENTS) {
+        for (Class<? extends ElementSource<?>> elementClass : RFileOperations.ELEMENTS) {
             ConstraintLayout RElement = (ConstraintLayout) LayoutInflater.from(this).inflate(R.layout.relement, null);
             ElementDetails details;
-
+            ElementSource<?> src;
             try {
-                details = elementClass.getConstructor().newInstance().getDetails();
+                src = elementClass.getConstructor().newInstance();
+                details = src.getDetails();
             } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException |
                      InstantiationException e) {
                 Log.e(tag, "Failed to get element details.");
@@ -76,6 +68,10 @@ public class RNewElementActivity extends AppCompatActivity {
             TextView elementName = RElement.findViewById(R.id.elementName);
 
             assert details != null;
+            Resources res = getApplicationContext().getResources();
+            int iconId = res.getIdentifier("element_" + details.Icon.toLowerCase(), "drawable", getPackageName());
+            if (iconId == 0) iconId = R.drawable.element_element;
+            elementIcon. setImageIcon(Icon.createWithResource(getApplicationContext(), iconId));
 
             //elementIcon.setImageIcon(Icon.);
             //elementIcon.setImageIcon(Icon.createWithBitmap(Bitmap.createScaledBitmap(((BitmapDrawable) Objects.requireNonNull(Icon.createWithData(details.Icon, 0, details.Icon.length()).loadDrawable(getBaseContext()))).getBitmap(), 640, 640, false)));
@@ -86,7 +82,7 @@ public class RNewElementActivity extends AppCompatActivity {
             AppCompatButton elementCreationButton = RElement.findViewById(R.id.editElementButton);
 
             elementCreationButton.setOnClickListener(v -> {
-                setResult(Activity.RESULT_OK,new Intent().putExtra("class", elementClass));
+                setResult(Activity.RESULT_OK,new Intent().putExtra("class", elementClass).putExtra("json", RFileOperations.gson.toJson(src)));
                 finish();
                 /*RMElementCreationScreen.setCreationListener(RWorkspaceViewActivity.currentActive);
 
