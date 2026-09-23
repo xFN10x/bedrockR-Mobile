@@ -18,12 +18,12 @@
     <string name="default_loading">Loading…</string>
     <string name="build_failed">Failed to build</string>
     <string name="build_success">Finished Build</string>
-    <string name="mc_sync_ask" translatable="false">Enable Minecraft Sync\?</string>
+    <string name="mc_sync_ask">Enable Minecraft Sync\?</string>
     <string name="needs_permissions">Permissions Needed</string>
-    <string name="mc_sync_desc" translatable="false">This project does not currently have Minecraft Sync enabled. Minecraft Sync automatically copies your built project files into com.mojang, so you can build, and playtest without needing to restart the game. \n\n WARNING: You need to set your storage mode to External in Minecraft, or bedrockR cannot access Minecraft\'s files.</string>
-    <string name="mc_sync_permission_ask" translatable="false">To use Minecraft Sync, bedrockR Mobile needs access to Minecraft\'s files. Do you want to grant those permissions\?</string>
-    <string name="mc_sync_success" translatable="false">Minecraft Sync is now enabled. You only need to reload your world to test now! (after you build of course!)</string>
-    <string name="mc_sync_failure_desc" translatable="false">Failed to enable MC sync. Do you have the game installed? If you do, report this as a bug. Disabling Minecraft sync.</string>
+    <string name="mc_sync_desc">This project does not currently have Minecraft Sync enabled. Minecraft Sync automatically copies your built project files into com.mojang, so you can build, and playtest without needing to restart the game. \n\n WARNING: You need to set your storage mode to External in Minecraft, or bedrockR cannot access Minecraft\'s files.</string>
+    <string name="mc_sync_permission_ask">To use Minecraft Sync, bedrockR Mobile needs access to Minecraft\'s files. Do you want to grant those permissions\?</string>
+    <string name="mc_sync_success">Minecraft Sync is now enabled. You only need to reload your world to test now! (after you build of course!)</string>
+    <string name="mc_sync_failure_desc">Failed to enable MC sync. Do you have the game installed? If you do, report this as a bug. Disabling Minecraft sync.</string>
     <string name="mc_sync_failure">com.mojang not found.</string>
     <string name="affirm">Yes</string>
     <string name="acknowledge">OK</string>
@@ -46,6 +46,6 @@
     <string name="value_hint">…</string>
     <string name="create_text">Create</string>
     <string name="failed_launch">Couldn\'t launch Minecraft, is it installed?</string>
-    <string name="unsupported_value_text">Not Supported</string>
+    <string name="unsupported_value_text">Not Supported: %s</string>
     <string name="workspace_unsupported">Workspace not supported for this version of bedrockR.</string>
 </resources>
