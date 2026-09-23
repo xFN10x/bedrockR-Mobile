@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="fn10.bedrockrmobile" />
+                  <option name="mobileSdkAppId" value="1:490398073512:android:a02ee598c4627b7f13789d" />
+                  <option name="projectId" value="bedrockrmobile-44fef4dd" />
+                  <option name="projectNumber" value="490398073512" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

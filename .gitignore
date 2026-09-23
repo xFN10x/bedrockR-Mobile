@@ -14,3 +14,7 @@
 .externalNativeBuild
 .cxx
 local.properties
+google-services.json
+.classpath
+.project
+.settings

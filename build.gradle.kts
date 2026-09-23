@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.gms.google-services") version "4.5.0" apply false
 }
 
 android {
@@ -62,6 +63,7 @@ configurations.all {
 
 dependencies {
     coreLibraryDesugaring(libs.desugarjdklibs)
+    implementation(platform("com.google.firebase:firebase-bom:34.19.0"))
 
     // https://mvnrepository.com/artifact/com.google.guava/guava
     implementation(libs.guava)
