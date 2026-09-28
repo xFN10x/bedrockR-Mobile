@@ -3,11 +3,13 @@ package fn10.bedrockrmobile.activity.components;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -57,8 +59,7 @@ public abstract class RMElementValue<T, U extends View> extends ConstraintLayout
             if (dropdown == null)
                 returning = (RMElementValue<T, ?>) new RMEStringValue(context);
         }
-        if (returning == null)
-        {
+        if (returning == null) {
             returning = (RMElementValue<T, ?>) new RMEUnsupportedValue(context);
         }
 
@@ -98,6 +99,17 @@ public abstract class RMElementValue<T, U extends View> extends ConstraintLayout
     public RMElementValue(Context context) {
         super(context);
         inflate(context, getView(), this);
+        ConstraintLayout elementViewGroup = findViewById(R.id.RElementValue);
+
+        View inputBox = elementViewGroup.findViewById(R.id.fieldBox);
+        ViewGroup.LayoutParams params = inputBox.getLayoutParams();
+        U input = getInput();
+        //input.setBackgroundResource(R.drawable.button);
+        int index = elementViewGroup.indexOfChild(inputBox);
+        //input.setLayoutParams(inputBox.getLayoutParams());
+        elementViewGroup.removeView(inputBox);
+        input.setId(R.id.fieldBox);
+        elementViewGroup.addView(input, index, params);
     }
 
     public void giveType(Class<T> cls) {
@@ -116,7 +128,12 @@ public abstract class RMElementValue<T, U extends View> extends ConstraintLayout
         return details;
     }
 
-    protected abstract int getView();
+    @LayoutRes
+    protected int getView() {
+        return R.layout.relementvalue;
+    }
+
+    public abstract U getInput();
 
     public TextView getFieldNameView() {
         return findViewById(R.id.fieldNameTextView);

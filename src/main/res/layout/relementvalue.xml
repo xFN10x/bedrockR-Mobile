@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/Dropdown_RElementValue"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/RElementValue"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="4dp">
@@ -17,17 +18,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.appcompat.widget.AppCompatSpinner
+    <View
         android:id="@+id/fieldBox"
         android:layout_width="0dp"
-        android:layout_height="55dp"
+        android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:background="@drawable/button"
-        android:clickable="true"
-        android:enabled="true"
-        android:textColor="@color/white"
-        android:padding="15dp"
+        android:theme="@style/Theme.BedrockRMobile"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/helpFieldButton"
         app:layout_constraintStart_toEndOf="@+id/fieldNameTextView"

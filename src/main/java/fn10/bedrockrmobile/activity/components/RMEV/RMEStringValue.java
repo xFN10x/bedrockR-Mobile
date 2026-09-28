@@ -1,7 +1,9 @@
 package fn10.bedrockrmobile.activity.components.RMEV;
 
 import android.content.Context;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.lang.reflect.InvocationTargetException;
@@ -11,7 +13,7 @@ import fn10.bedrockr.utils.RAnnotation;
 import fn10.bedrockrmobile.R;
 import fn10.bedrockrmobile.activity.components.RMElementValue;
 
-public class RMEStringValue extends RMElementValue<String, TextView> {
+public class RMEStringValue extends RMElementValue<String, EditText> {
 
     private FieldFilters.FieldFilter filter = new FieldFilters.RegularStringFilter();
 
@@ -28,8 +30,10 @@ public class RMEStringValue extends RMElementValue<String, TextView> {
     }
 
     @Override
-    protected int getView() {
-        return R.layout.rev_string;
+    public EditText getInput() {
+        EditText building = new EditText(getContext(), null, 0, R.style.Theme_BedrockRMobile);
+        building.setBackgroundResource(R.drawable.buttone);
+        return building;
     }
 
     @Override

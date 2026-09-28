@@ -6,23 +6,25 @@ import android.widget.TextView;
 import fn10.bedrockrmobile.R;
 import fn10.bedrockrmobile.activity.components.RMElementValue;
 
-public class RMEUnsupportedValue extends RMElementValue<Void, TextView> {
+public class RMEUnsupportedValue<N> extends RMElementValue<N, TextView> {
     public RMEUnsupportedValue(Context context) {
         super(context);
     }
 
     @Override
-    protected int getView() {
-        return R.layout.rev_unsupported;
+    public TextView getInput() {
+        TextView building = new TextView(getContext(), null, 0, R.style.Theme_BedrockRMobile);
+        building.setText(getContext().getString(R.string.unsupported_value_text).formatted(getType()));
+        return building;
     }
 
     @Override
-    public void setValue(Void val) {
+    public void setValue(N val) {
 
     }
 
     @Override
-    public Void getValue() {
+    public N getValue() {
         return null;
     }
 
