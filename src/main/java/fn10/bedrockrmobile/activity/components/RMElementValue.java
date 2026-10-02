@@ -100,10 +100,10 @@ public abstract class RMElementValue<T, U extends View> extends ConstraintLayout
         super(context);
         inflate(context, getView(), this);
         ConstraintLayout elementViewGroup = findViewById(R.id.RElementValue);
-
+        context.setTheme(R.style.Theme_BedrockRMobile);
         View inputBox = elementViewGroup.findViewById(R.id.fieldBox);
         ViewGroup.LayoutParams params = inputBox.getLayoutParams();
-        U input = getInput();
+        U input = getInput(context);
         //input.setBackgroundResource(R.drawable.button);
         int index = elementViewGroup.indexOfChild(inputBox);
         //input.setLayoutParams(inputBox.getLayoutParams());
@@ -133,7 +133,7 @@ public abstract class RMElementValue<T, U extends View> extends ConstraintLayout
         return R.layout.relementvalue;
     }
 
-    public abstract U getInput();
+    public abstract U getInput(Context context);
 
     public TextView getFieldNameView() {
         return findViewById(R.id.fieldNameTextView);

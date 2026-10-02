@@ -12,6 +12,7 @@ import fn10.bedrockr.addons.element.FieldFilters;
 import fn10.bedrockr.utils.RAnnotation;
 import fn10.bedrockrmobile.R;
 import fn10.bedrockrmobile.activity.components.RMElementValue;
+import kotlin.Unit;
 
 public class RMEStringValue extends RMElementValue<String, EditText> {
 
@@ -30,9 +31,12 @@ public class RMEStringValue extends RMElementValue<String, EditText> {
     }
 
     @Override
-    public EditText getInput() {
-        EditText building = new EditText(getContext(), null, 0, R.style.Theme_BedrockRMobile);
-        building.setBackgroundResource(R.drawable.buttone);
+    public EditText getInput(Context context) {
+        EditText building = new EditText(context);
+        building.setBackgroundResource(R.drawable.button);
+        building.setCompoundDrawablePadding(15);
+        building.setTextSize(14f);
+        building.setHint("...");
         return building;
     }
 

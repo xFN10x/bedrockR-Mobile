@@ -12,8 +12,8 @@ public class RMEUnsupportedValue<N> extends RMElementValue<N, TextView> {
     }
 
     @Override
-    public TextView getInput() {
-        TextView building = new TextView(getContext(), null, 0, R.style.Theme_BedrockRMobile);
+    public TextView getInput(Context context) {
+        TextView building = new TextView(context);
         building.setText(getContext().getString(R.string.unsupported_value_text).formatted(getType()));
         return building;
     }

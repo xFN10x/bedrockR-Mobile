@@ -74,4 +74,5 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/draftButton"
         android:text="@string/create_text" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

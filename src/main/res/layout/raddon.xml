@@ -71,4 +71,5 @@
         app:layout_constraintBottom_toTopOf="@+id/loadAddonButton"
         app:layout_constraintEnd_toEndOf="@+id/addonGradient"
         app:layout_constraintStart_toStartOf="@+id/addonGradient" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

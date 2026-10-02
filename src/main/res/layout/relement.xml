@@ -4,6 +4,8 @@
     android:id="@+id/RElement"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="20dp"
+    android:layout_marginBottom="20dp"
     android:background="@drawable/relement"
     android:paddingStart="10dp"
     android:paddingEnd="10dp">
