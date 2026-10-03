@@ -34,7 +34,7 @@ public class RMEStringValue extends RMElementValue<String, EditText> {
     public EditText getInput(Context context) {
         EditText building = new EditText(context);
         building.setBackgroundResource(R.drawable.button);
-        building.setCompoundDrawablePadding(15);
+        building.setPadding(40,10,40,10);
         building.setTextSize(14f);
         building.setHint("...");
         return building;
