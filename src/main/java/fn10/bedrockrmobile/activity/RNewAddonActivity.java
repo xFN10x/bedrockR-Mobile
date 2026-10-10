@@ -52,7 +52,7 @@ public class RNewAddonActivity extends AppCompatActivity {
         Button backButton = findViewById(R.id.backButton);
         Spinner minimumEngineVersionSpinner = findViewById(R.id.minimumEngineVersionSpinner);
 
-        minimumEngineVersionSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, RFileOperations.PICKABLE_VERSIONS));
+        minimumEngineVersionSpinner.setAdapter(new ArrayAdapter<>(this, R.layout.rspinneritem, RFileOperations.PICKABLE_VERSIONS));
 
         backButton.setOnClickListener(v -> finish());
 

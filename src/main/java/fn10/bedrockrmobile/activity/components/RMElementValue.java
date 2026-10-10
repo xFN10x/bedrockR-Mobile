@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
 import fn10.bedrockr.addons.element.ValidatableValue;
@@ -22,6 +23,7 @@ import fn10.bedrockr.addons.element.interfaces.SourcelessElementFile;
 import fn10.bedrockr.utils.RAnnotation;
 import fn10.bedrockr.utils.RLogUtils;
 import fn10.bedrockrmobile.R;
+import fn10.bedrockrmobile.activity.components.RMEV.RMEBooleanValue;
 import fn10.bedrockrmobile.activity.components.RMEV.RMEStringValue;
 import fn10.bedrockrmobile.activity.components.RMEV.RMEUnsupportedValue;
 import fn10.bedrockrmobile.dialog.RHtmlAlert;
@@ -41,30 +43,48 @@ public abstract class RMElementValue<T, U extends View> extends ConstraintLayout
                                               @NonNull Class<T> type,
                                               @Nullable SourcelessElementFile TargetFile,
                                               @Nullable String WorkspaceName) {
-        RAnnotation.FieldDetails details = field.getAnnotation(RAnnotation.FieldDetails.class);
-        RAnnotation.HelpMessage helpMsg = field.getAnnotation(RAnnotation.HelpMessage.class);
-        RAnnotation.StringDropdownField dropdown = field.getAnnotation(RAnnotation.StringDropdownField.class);
+        RAnnotation.FieldDetails details ;
+        RAnnotation.HelpMessage helpMsg;
+        RAnnotation.StringDropdownField dropdown ;
+        if (field != null) {
+            details = field.getAnnotation(RAnnotation.FieldDetails.class);
+            helpMsg = field.getAnnotation(RAnnotation.HelpMessage.class);
+            dropdown = field.getAnnotation(RAnnotation.StringDropdownField.class);
+        } else {
+            details = null;
+            helpMsg = new RAnnotation.HelpMessage() {
+                @Override
+                public Class<? extends Annotation> annotationType() {
+                    return RAnnotation.HelpMessage.class;
+                }
+
+                @Override
+                public String value() {
+                    return "No help message.";
+                }
+            };
+            dropdown = null;
+        }
 
         RMElementValue<T, ?> returning = null;
         String fieldName;
         String fieldHelp;
 
         if (details != null) fieldName = details.displayName();
-        else fieldName = field.getName();
+        else fieldName = "";
 
         if (helpMsg != null) fieldHelp = helpMsg.value();
         else fieldHelp = null;
 
         if (are(type, String.class)) {
             if (dropdown == null)
-                returning = (RMElementValue<T, ?>) new RMEStringValue(context);
+                returning = (RMElementValue<T, ?>) new RMEStringValue(context, details);
+        } else if (are(type, boolean.class)) {
+            returning = (RMElementValue<T, ?>) new RMEBooleanValue(context, details);
         }
         if (returning == null) {
-            returning = (RMElementValue<T, ?>) new RMEUnsupportedValue(context);
+            returning = (RMElementValue<T, ?>) new RMEUnsupportedValue(context, type, details);
         }
-
-        returning.giveType(type);
-        returning.giveDetails(details);
 
         returning.getFieldNameView().setText(fieldName);
         if (fieldHelp != null) {
@@ -96,13 +116,15 @@ public abstract class RMElementValue<T, U extends View> extends ConstraintLayout
     private RAnnotation.FieldDetails details;
     private String problem;
 
-    public RMElementValue(Context context) {
+    public RMElementValue(Context context, Class<T> cls, @Nullable RAnnotation.FieldDetails details) {
         super(context);
         inflate(context, getView(), this);
         ConstraintLayout elementViewGroup = findViewById(R.id.RElementValue);
         context.setTheme(R.style.Theme_BedrockRMobile);
         View inputBox = elementViewGroup.findViewById(R.id.fieldBox);
         ViewGroup.LayoutParams params = inputBox.getLayoutParams();
+        giveType(cls);
+        giveDetails(details);
         U input = getInput(context);
         //input.setBackgroundResource(R.drawable.button);
         int index = elementViewGroup.indexOfChild(inputBox);

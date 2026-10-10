@@ -128,7 +128,7 @@ public class RMElementEditingScreen extends AppCompatActivity {
 
 
                     Class<?> InputType = field.getType();
-                    RMElementValue<?, ?> rmev = RMElementValue.of(getSupportFragmentManager(), getApplicationContext(), field, InputType, srcObj.getSerialized(), RFileOperations.getCurrentWorkspace().WorkspaceName);
+                    RMElementValue<?, ?> rmev = RMElementValue.of(getSupportFragmentManager(), this, field, InputType, srcObj.getSerialized(), RFileOperations.getCurrentWorkspace().WorkspaceName);
                     FieldRElementValues.put(field, rmev);
                     InnerScroll.addView(rmev);
 

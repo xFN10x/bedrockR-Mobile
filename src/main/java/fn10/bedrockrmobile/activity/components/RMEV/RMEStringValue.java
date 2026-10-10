@@ -1,10 +1,13 @@
 package fn10.bedrockrmobile.activity.components.RMEV;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.AppCompatEditText;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -14,13 +17,13 @@ import fn10.bedrockrmobile.R;
 import fn10.bedrockrmobile.activity.components.RMElementValue;
 import kotlin.Unit;
 
-public class RMEStringValue extends RMElementValue<String, EditText> {
+@SuppressLint("ViewConstructor")
+public class RMEStringValue extends RMElementValue<String, AppCompatEditText> {
 
     private FieldFilters.FieldFilter filter = new FieldFilters.RegularStringFilter();
 
-    public RMEStringValue(Context context) {
-        super(context);
-        RAnnotation.FieldDetails details = getDetails();
+    public RMEStringValue(Context context, RAnnotation.FieldDetails details) {
+        super(context, String.class, details);
         if (details != null)
             try {
                 filter = details.Filter().getConstructor().newInstance();
@@ -31,8 +34,8 @@ public class RMEStringValue extends RMElementValue<String, EditText> {
     }
 
     @Override
-    public EditText getInput(Context context) {
-        EditText building = new EditText(context);
+    public AppCompatEditText getInput(Context context) {
+        AppCompatEditText building = new AppCompatEditText(context);
         building.setBackgroundResource(R.drawable.button);
         building.setPadding(40,10,40,10);
         building.setTextSize(14f);
