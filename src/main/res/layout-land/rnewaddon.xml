@@ -139,6 +139,7 @@
                     android:background="@drawable/rspinnerbg"
                     android:entries="@array/minimum_version"
                     android:padding="15dp"
+                    android:popupBackground="@color/background"
                     android:spinnerMode="dropdown"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

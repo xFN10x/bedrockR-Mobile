@@ -3,6 +3,7 @@ package fn10.bedrockrmobile.activity.components.RMEV;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.SimpleAdapter;
 import android.widget.SpinnerAdapter;
@@ -29,13 +30,9 @@ public class RMEBooleanValue extends RMElementValue<Boolean, AppCompatSpinner> {
     public AppCompatSpinner getInput(Context context) {
         AppCompatSpinner building = new AppCompatSpinner(context);
         building.setBackgroundResource(R.drawable.rspinnerbg);
+        building.setPopupBackgroundResource(R.color.background);
         building.setPadding(40,10,40,10);
-        building.setAdapter(new SimpleAdapter(
-                context,
-                List.of(Map.of("val", false), Map.of("val", true)),
-                R.layout.rspinneritem,
-                new String[]{"val"},
-                new int[]{R.id.itemText}));
+        building.setAdapter(new ArrayAdapter<Boolean>(context, R.layout.rspinneritem, R.id.itemText, List.of(true,false)));
         return building;
     }
 
