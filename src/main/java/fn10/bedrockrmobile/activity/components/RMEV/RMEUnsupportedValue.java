@@ -4,7 +4,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
+
+import java.lang.reflect.Field;
 
 import fn10.bedrockr.utils.RAnnotation;
 import fn10.bedrockrmobile.R;
@@ -12,8 +15,8 @@ import fn10.bedrockrmobile.activity.components.RMElementValue;
 
 @SuppressLint("ViewConstructor")
 public class RMEUnsupportedValue<N> extends RMElementValue<N, AppCompatTextView> {
-    public RMEUnsupportedValue(Context context, Class<N> cls, RAnnotation.FieldDetails details) {
-        super(context, cls, details);
+    public RMEUnsupportedValue(Context context, Class<N> cls, RAnnotation.FieldDetails details, @Nullable Field field) {
+        super(context, cls, details, field);
     }
 
     @Override

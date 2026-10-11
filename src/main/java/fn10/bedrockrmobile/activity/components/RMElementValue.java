@@ -24,6 +24,8 @@ import fn10.bedrockr.utils.RAnnotation;
 import fn10.bedrockr.utils.RLogUtils;
 import fn10.bedrockrmobile.R;
 import fn10.bedrockrmobile.activity.components.RMEV.RMEBooleanValue;
+import fn10.bedrockrmobile.activity.components.RMEV.RMENotStrictStringDropdownValue;
+import fn10.bedrockrmobile.activity.components.RMEV.RMEStringDropdownValue;
 import fn10.bedrockrmobile.activity.components.RMEV.RMEStringValue;
 import fn10.bedrockrmobile.activity.components.RMEV.RMEUnsupportedValue;
 import fn10.bedrockrmobile.dialog.RHtmlAlert;
@@ -38,6 +40,7 @@ public abstract class RMElementValue<T, U extends View> extends ConstraintLayout
         return cls1.isAssignableFrom(cls0);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> RMElementValue<T, ?> of(FragmentManager frag, Context context,
                                               @Nullable Field field,
                                               @NonNull Class<T> type,
@@ -78,12 +81,16 @@ public abstract class RMElementValue<T, U extends View> extends ConstraintLayout
 
         if (are(type, String.class)) {
             if (dropdown == null)
-                returning = (RMElementValue<T, ?>) new RMEStringValue(context, details);
+                returning = (RMElementValue<T, ?>) new RMEStringValue(context, details,field);
+            else if (dropdown.strict())
+                returning = (RMElementValue<T, ?>) new RMEStringDropdownValue(context, details,field);
+            else
+                returning = (RMElementValue<T, ?>) new RMENotStrictStringDropdownValue(context, details,field);
         } else if (are(type, boolean.class)) {
-            returning = (RMElementValue<T, ?>) new RMEBooleanValue(context, details);
+            returning = (RMElementValue<T, ?>) new RMEBooleanValue(context, details,field);
         }
         if (returning == null) {
-            returning = (RMElementValue<T, ?>) new RMEUnsupportedValue(context, type, details);
+            returning = (RMElementValue<T, ?>) new RMEUnsupportedValue(context, type, details, field);
         }
 
         returning.getFieldNameView().setText(fieldName);
@@ -113,16 +120,18 @@ public abstract class RMElementValue<T, U extends View> extends ConstraintLayout
     }
 
     private Class<T> type;
-    private RAnnotation.FieldDetails details;
+    private @Nullable RAnnotation.FieldDetails details;
+    private @Nullable Field field;
     private String problem;
 
-    public RMElementValue(Context context, Class<T> cls, @Nullable RAnnotation.FieldDetails details) {
+    public RMElementValue(Context context, Class<T> cls, @Nullable RAnnotation.FieldDetails details, @Nullable Field field) {
         super(context);
         inflate(context, getView(), this);
         ConstraintLayout elementViewGroup = findViewById(R.id.RElementValue);
         context.setTheme(R.style.Theme_BedrockRMobile);
         View inputBox = elementViewGroup.findViewById(R.id.fieldBox);
         ViewGroup.LayoutParams params = inputBox.getLayoutParams();
+        giveField(field);
         giveType(cls);
         giveDetails(details);
         U input = getInput(context);
@@ -134,20 +143,27 @@ public abstract class RMElementValue<T, U extends View> extends ConstraintLayout
         elementViewGroup.addView(input, index, params);
     }
 
-    public void giveType(Class<T> cls) {
+    public void giveType(@Nullable Class<T> cls) {
         type = cls;
+    }
+
+    public void giveField(@Nullable Field field) {
+        this.field = field;
     }
 
     public void giveDetails(RAnnotation.FieldDetails details) {
         this.details = details;
     }
 
-    public Class<T> getType() {
+    public @Nullable Class<T> getType() {
         return type;
     }
 
-    public RAnnotation.FieldDetails getDetails() {
+    public @Nullable RAnnotation.FieldDetails getDetails() {
         return details;
+    }
+    public @Nullable Field getField() {
+        return field;
     }
 
     @LayoutRes

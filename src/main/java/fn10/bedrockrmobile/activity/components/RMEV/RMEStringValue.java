@@ -7,8 +7,10 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatEditText;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
 import fn10.bedrockr.addons.element.FieldFilters;
@@ -22,8 +24,8 @@ public class RMEStringValue extends RMElementValue<String, AppCompatEditText> {
 
     private FieldFilters.FieldFilter filter = new FieldFilters.RegularStringFilter();
 
-    public RMEStringValue(Context context, RAnnotation.FieldDetails details) {
-        super(context, String.class, details);
+    public RMEStringValue(Context context, RAnnotation.FieldDetails details, @Nullable Field field) {
+        super(context, String.class, details, field);
         if (details != null)
             try {
                 filter = details.Filter().getConstructor().newInstance();

@@ -8,8 +8,10 @@ import android.widget.EditText;
 import android.widget.SimpleAdapter;
 import android.widget.SpinnerAdapter;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatSpinner;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
@@ -22,8 +24,8 @@ import fn10.bedrockrmobile.activity.components.RMElementValue;
 @SuppressLint("ViewConstructor")
 public class RMEBooleanValue extends RMElementValue<Boolean, AppCompatSpinner> {
 
-    public RMEBooleanValue(Context context, RAnnotation.FieldDetails details) {
-        super(context, Boolean.class, details);
+    public RMEBooleanValue(Context context, RAnnotation.FieldDetails details, @Nullable Field field) {
+        super(context, Boolean.class, details, field);
     }
 
     @Override
