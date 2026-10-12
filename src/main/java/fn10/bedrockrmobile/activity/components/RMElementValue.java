@@ -123,11 +123,12 @@ public abstract class RMElementValue<T, U extends View> extends ConstraintLayout
     private @Nullable RAnnotation.FieldDetails details;
     private @Nullable Field field;
     private String problem;
+    private final ConstraintLayout elementViewGroup;
 
     public RMElementValue(Context context, Class<T> cls, @Nullable RAnnotation.FieldDetails details, @Nullable Field field) {
         super(context);
         inflate(context, getView(), this);
-        ConstraintLayout elementViewGroup = findViewById(R.id.RElementValue);
+        elementViewGroup = findViewById(R.id.RElementValue);
         context.setTheme(R.style.Theme_BedrockRMobile);
         View inputBox = elementViewGroup.findViewById(R.id.fieldBox);
         ViewGroup.LayoutParams params = inputBox.getLayoutParams();
@@ -141,6 +142,15 @@ public abstract class RMElementValue<T, U extends View> extends ConstraintLayout
         elementViewGroup.removeView(inputBox);
         input.setId(R.id.fieldBox);
         elementViewGroup.addView(input, index, params);
+
+        CheckBox enabledButton = elementViewGroup.findViewById(R.id.enabledCheck);
+        enabledButton.setOnClickListener(v -> {
+            input.setEnabled(((CheckBox) v).isChecked());
+        });
+    }
+
+    public boolean isEnabled() {
+        return ((CheckBox) elementViewGroup.findViewById(R.id.enabledCheck)).isChecked();
     }
 
     public void giveType(@Nullable Class<T> cls) {

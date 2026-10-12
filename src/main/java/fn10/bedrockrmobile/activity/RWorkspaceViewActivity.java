@@ -21,6 +21,7 @@ import androidx.core.content.FileProvider;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,6 +39,7 @@ import fn10.bedrockr.addons.element.interfaces.ElementSource;
 import fn10.bedrockr.addons.resource.WorkspaceResources;
 import fn10.bedrockr.utils.RFileOperations;
 import fn10.bedrockrmobile.R;
+import fn10.bedrockrmobile.activity.contracts.ElementCreationScreenContract;
 import fn10.bedrockrmobile.activity.contracts.PickElementContract;
 import fn10.bedrockrmobile.dialog.RAlertDialog;
 import fn10.bedrockrmobile.dialog.RLoadingDialog;
@@ -48,25 +50,33 @@ public class RWorkspaceViewActivity extends AppCompatActivity implements Element
     public static RWorkspaceViewActivity currentActive;
     private static final String tag = "RWorkspace";
     private SourceWorkspaceFile swpf;
-    private final ActivityResultLauncher<ObjectUtils.Null> getSourceElementClass = registerForActivityResult(new PickElementContract(), result -> {
+    private final ActivityResultLauncher<Pair<Class<? extends ElementSource<?>>, String>> elementCreatedContract = registerForActivityResult(new ElementCreationScreenContract(), result -> {
+        if (result == null) {
+            onElementCancel();
+            return;
+        }
+        if (result.getLeft()) {
+            onElementDraft(result.getRight());
+        } else {
+            onElementCreate(result.getRight());
+        }
+    });
+    private final ActivityResultLauncher<ObjectUtils.Null> pickElementSrcContract = registerForActivityResult(new PickElementContract(), result -> {
         if (result != null) {
-            Intent creationScreenIntent = new Intent();
-            creationScreenIntent.setAction("bedrockrmobile.intent.CREATEELEMENT")
-                    .putExtra("ElementSource", result);
-            startActivity(creationScreenIntent);
+            elementCreatedContract.launch(result);
         }
     });
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         setContentView(R.layout.rworkspace);
 
         Intent intent = getIntent();
         SourceWorkspaceFile SWPF;
         try {
-        WorkspaceFile workspaceDiscFile = RFileOperations.getWorkspaceFile(intent.getStringExtra(RMFileOperations.OPEN_WORKSPACE_EXTRA_NAME));
+            WorkspaceFile workspaceDiscFile = RFileOperations.getWorkspaceFile(intent.getStringExtra(RMFileOperations.OPEN_WORKSPACE_EXTRA_NAME));
             SWPF = workspaceDiscFile.getNewSource();
         } catch (IOException e) {
             RAlertDialog.showError(getResources(), getSupportFragmentManager(), R.string.workspace_failed);
@@ -80,7 +90,7 @@ public class RWorkspaceViewActivity extends AppCompatActivity implements Element
         ImageButton newElementButton = findViewById(R.id.addElementButton);
 
         newElementButton.setOnClickListener(v -> {
-            getSourceElementClass.launch(null);
+            pickElementSrcContract.launch(null);
             /*Intent intent1 = new Intent(Intent.ACTION_VIEW);
             intent1.setAction("bedrockrmobile.intent.NEWELEMENT");
             intent1.putExtra("wpname", swf.workspaceName());
@@ -257,7 +267,7 @@ public class RWorkspaceViewActivity extends AppCompatActivity implements Element
         RLoadingDialog dialog = new RLoadingDialog();
         runOnUiThread(() -> dialog.show(getSupportFragmentManager(), "R_LOADING_SCREEN"));
         WorkspaceResources res = WorkspaceResources.load(swpf.workspaceName());
-
+//TODO: build new resources
         new Thread(() -> {
             try {
                 if (rebuild)
@@ -285,9 +295,9 @@ public class RWorkspaceViewActivity extends AppCompatActivity implements Element
                 }
 
                 //build resources
-                gbv.build(BPdir, swpf.getSerialized(), RPdir, gbv,res);
+                gbv.build(BPdir, swpf.getSerialized(), RPdir, gbv, res);
                 //build workspace
-                swpf.getSerialized().build(BPdir, swpf.getSerialized(), RPdir, gbv,res);
+                swpf.getSerialized().build(BPdir, swpf.getSerialized(), RPdir, gbv, res);
 
                 //build mcpack
                 RMFileOperations.buildMCAddon(swpf.workspaceName());
@@ -304,23 +314,22 @@ public class RWorkspaceViewActivity extends AppCompatActivity implements Element
         LinearLayout InnerScroll = findViewById(R.id.ElementInnerScroll);
         for (ElementFile<?> file : RFileOperations.getElementsFromWorkspace(swpf.workspaceName())) {
             ConstraintLayout RElement = (ConstraintLayout) LayoutInflater.from(this).inflate(R.layout.rworkspaceelement, null);
-            Class<? extends ElementSource<?>> sourceElementClass = file.getSourceClass();
+            ElementSource<?> sourceFile = file.getNewSource();
 
-            ElementDetails details;
-            try {
-                details = (ElementDetails) sourceElementClass.getMethod("getDetails", null).invoke(null, null);
-            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                throw new RuntimeException(e);
-            }
+            ElementDetails details = sourceFile.getDetails();
 
             ImageView elementIcon = RElement.findViewById(R.id.elementIcon);
             TextView elementDescription = RElement.findViewById(R.id.elementDescription);
             TextView elementName = RElement.findViewById(R.id.elementName);
 
-            assert details != null;
-            Resources res = getApplicationContext().getResources();
-            int iconId = res.getIdentifier("element_" + details.Icon.toLowerCase(), "drawable", null);
-            elementIcon. setImageIcon(Icon.createWithResource(getApplicationContext(), iconId));
+//            Resources res = getApplicationContext().getResources();
+//            int iconId = res.getIdentifier("element_" + details.Icon.toLowerCase(), "drawable", null);
+//            elementIcon.setImageIcon(Icon.createWithResource(getApplicationContext(), iconId));
+            try {
+                sourceFile.getIcon(swpf.getSerialized().getRes(), RFileOperations.getCurrentImgHandler());
+            } catch (IOException | WorkspaceResources.WorkspaceUnsupportedException e) {
+                throw new RuntimeException(e);
+            }
 
             elementDescription.setText(RMFileOperations.parseHTMLBackIntoString(details.Description).replace("\n", " ").replace("  ", " "));
             elementName.setText(file.getElementName());
@@ -335,6 +344,7 @@ public class RWorkspaceViewActivity extends AppCompatActivity implements Element
         try {
             element.saveJSONFile(swpf.getSerialized().WorkspaceName);
         } catch (IOException e) {
+            Log.e(tag, "Failed to save element.", e);
         }
         refreshElements();
     }
@@ -346,6 +356,7 @@ public class RWorkspaceViewActivity extends AppCompatActivity implements Element
 
             refreshElements();
         } catch (IOException e) {
+            Log.e(tag, "Failed to save element.", e);
         }
     }
 

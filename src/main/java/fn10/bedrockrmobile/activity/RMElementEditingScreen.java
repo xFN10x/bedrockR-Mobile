@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
@@ -33,7 +34,6 @@ import fn10.bedrockrmobile.dialog.RHtmlAlert;
 import fn10.bedrockrmobile.elements.RMElementCreationHandler;
 
 public class RMElementEditingScreen extends AppCompatActivity {
-
     private static final int AUTOMATIC_MODE = -1;
     private static final String tag = "RMElementEditingScreen";
     public final static int CREATED = 0;
@@ -153,7 +153,7 @@ public class RMElementEditingScreen extends AppCompatActivity {
             draftButton.setOnClickListener(v -> {
                 ElementSource<?> es;
                 if ((es = create(true)) != null) {
-                    setResult(DRAFTED, new Intent().putExtra("source", es.getJSONString()));
+                    setResult(DRAFTED, getReturnIntent(es));
                     finish();
                 }
             });
@@ -161,11 +161,16 @@ public class RMElementEditingScreen extends AppCompatActivity {
             createButton.setOnClickListener(v -> {
                 ElementSource<?> es;
                 if ((es = create(false)) != null) {
-                    setResult(CREATED, new Intent().putExtra("source", es.getJSONString()));
+                    setResult(CREATED, getReturnIntent(es));
                     finish();
                 }
             });
         }
+    }
+
+    @NonNull
+    private static Intent getReturnIntent(ElementSource<?> es) {
+        return new Intent().putExtra("filejson", es.getJSONString()).putExtra("fileCls", es.getSerilizedClass());
     }
 
     //taken from RElementValue
@@ -179,6 +184,7 @@ public class RMElementEditingScreen extends AppCompatActivity {
     public ElementSource<?> create(boolean draft) {
         Map<Field, String> incorrectFields = new HashMap<>();
         for (Map.Entry<Field, RMElementValue<?, ?>> entry : FieldRElementValues.entrySet()) {
+            if (!entry.getValue().isEnabled()) continue;
             RAnnotation.VeryImportant important = entry.getKey().getAnnotation(RAnnotation.VeryImportant.class);
             if (!entry.getValue().valid((!draft) || important != null)) {
                 incorrectFields.put(entry.getKey(), entry.getValue().getProblemMessage());

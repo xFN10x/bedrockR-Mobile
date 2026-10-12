@@ -14,6 +14,10 @@ import org.apache.commons.lang3.tuple.Triple;
 
 import fn10.bedrockr.addons.element.interfaces.ElementSource;
 
+/**
+ * Input - Nothing
+ * Output - a Pair, holding the ElementSrc class, and Json.
+ */
 public class PickElementContract extends ActivityResultContract<ObjectUtils.Null, Pair<Class<? extends ElementSource<?>>, String>> {
     private final static String tag = "PickElementContract";
 
@@ -28,7 +32,7 @@ public class PickElementContract extends ActivityResultContract<ObjectUtils.Null
     @Override
     public Pair<Class<? extends ElementSource<?>>, String> parseResult(int i, @Nullable Intent intent) {
         if (i == Activity.RESULT_OK)
-            return Pair.of(((Class<? extends ElementSource<?>>) intent.getSerializableExtra("class")), intent.getStringExtra("json"));
+            return Pair.of(((Class<? extends ElementSource<?>>) intent.getSerializableExtra("class", Class.class)), intent.getStringExtra("json"));
         else
             return null;
     }

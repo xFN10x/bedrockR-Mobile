@@ -31,6 +31,7 @@ import fn10.bedrockr.addons.element.elementFiles.WorkspaceFile;
 import fn10.bedrockr.utils.Greetings;
 import fn10.bedrockr.utils.RFileOperations;
 import fn10.bedrockr.utils.SettingsFile;
+import fn10.bedrockrmobile.utils.AndroidImageHandler;
 import fn10.bedrockrmobile.utils.CompatGreetings;
 import fn10.bedrockrmobile.utils.RMFileOperations;
 
@@ -45,13 +46,12 @@ public class Launcher extends AppCompatActivity {
     private static final String tag = "Launcher";
 
     private void setupApp() {
+        RFileOperations.init(new AndroidImageHandler());
         Log.i(tag, MessageFormat.format("bedrockR Mobile version: {0} (bedrockR version: {1}) ",
                 VERSION,
                 RFileOperations.VERSION));
         Log.i(tag, "Public Folder: " + RMFileOperations.BEDROCKR_PUBLIC_PATH.toAbsolutePath());
         RFileOperations.setBaseDir(getFilesDir());
-        SettingsFile settings = SettingsFile.load();
-        RFileOperations.setComMojangDir(settings.comMojangPath);
         Log.i(tag, "Internal Folder: " + RFileOperations.getBaseDirectory().getAbsolutePath());
     }
 
