@@ -63,7 +63,7 @@ configurations.all {
 
 dependencies {
     coreLibraryDesugaring(libs.desugarjdklibs)
-    implementation("androidx.core:core-splashscreen:1.0.0")
+    implementation("androidx.core:core-splashscreen:1.2.0")
     implementation(platform("com.google.firebase:firebase-bom:34.19.0"))
 
     // https://mvnrepository.com/artifact/com.google.guava/guava
