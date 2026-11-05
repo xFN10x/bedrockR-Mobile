@@ -1,5 +1,5 @@
 [versions]
-agp = "9.5.0"
+agp = "9.5.1"
 commonsIo = "2.22.0"
 commonsLang3 = "3.21.0"
 desugar_jdk_libs = "2.1.5"
