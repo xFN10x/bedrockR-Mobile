@@ -1,7 +1,7 @@
 [versions]
 agp = "9.5.1"
 commonsIo = "2.22.0"
-commonsLang3 = "3.21.0"
+commonsLang3 = "3.22.0"
 desugar_jdk_libs = "2.1.5"
 githubBedrockr = "-SNAPSHOT"
 gson = "2.15.0"
